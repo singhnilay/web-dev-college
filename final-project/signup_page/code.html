@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>UniHub - Sign Up</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&amp;family=DM+Serif+Display&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link href="style.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="split">
+    <div class="brand-panel">
+      <div class="watermark-bg"></div>
+      <div class="brand-copy">
+        <h2>Join the Discourse</h2>
+        <p>Gain access to exclusive campus publications, academic debates, and curated event directories.</p>
+      </div>
+    </div>
+    <div class="form-panel">
+      <a aria-label="Go back" class="back-link" href="#">
+        <span class="material-symbols-outlined">arrow_back</span>
+        <span>Back</span>
+      </a>
+      <div class="form-wrap">
+        <div class="form-intro">
+          <h1>Create Account</h1>
+          <p>For students, faculty, and alumni.</p>
+        </div>
+        <form id="signup-form">
+          <div class="field">
+            <label for="email">Email</label>
+            <input class="form-input" id="email" name="email" placeholder="Enter your .edu email" required=""
+              type="email" />
+          </div>
+          <div class="field">
+            <label for="username">Username</label>
+            <input class="form-input" id="username" name="username" placeholder="Choose a username" required=""
+              type="text" />
+          </div>
+          <div class="field" id="password-group">
+            <label for="password">Password</label>
+            <input class="form-input" id="password" name="password" placeholder="Create a password" required=""
+              type="password" />
+            <p class="field-error is-hidden" id="password-error">Password must be at least 8 characters long.</p>
+          </div>
+          <button class="btn-submit" id="submit-btn" type="submit">
+            <span id="btn-text">Create Account</span>
+          </button>
+          <p class="signin-prompt">
+            Already have an account? <a href="#">Sign in</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("signup-form");
+      const submitBtn = document.getElementById("submit-btn");
+      const btnText = document.getElementById("btn-text");
+      const passwordInput = document.getElementById("password");
+      const passwordError = document.getElementById("password-error");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        if (passwordInput.value.length < 8) {
+          passwordInput.classList.add("input-error");
+          passwordError.classList.remove("is-hidden");
+          return;
+        }
+
+        passwordInput.classList.remove("input-error");
+        passwordError.classList.add("is-hidden");
+
+        submitBtn.classList.add("is-loading");
+        btnText.textContent = "Authenticating...";
+
+        setTimeout(() => {
+          submitBtn.classList.remove("is-loading");
+          btnText.textContent = "Create Account";
+          form.reset();
+        }, 2000);
+      });
+
+      passwordInput.addEventListener("input", () => {
+        if (passwordInput.classList.contains("input-error")) {
+          passwordInput.classList.remove("input-error");
+          passwordError.classList.add("is-hidden");
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
