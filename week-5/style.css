@@ -1,0 +1,475 @@
+/* =========================
+   RESET & GLOBAL STYLES
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f1f1f1;
+    color: #000;
+    line-height: 1.6;
+}
+
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar {
+    height: 42px;
+    background-color: #000;
+    color: #fff;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 24px;
+}
+
+.social-icons,
+.follow-icons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.social-icons span,
+.follow-icons span {
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.search {
+    cursor: pointer;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.blog-header {
+    background-color: #fff;
+    text-align: center;
+
+    padding: 55px 20px;
+}
+
+.blog-header h1 {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.blog-header p {
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.blog-header p span {
+    background-color: #000;
+    color: #fff;
+    padding: 3px 8px;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+    position: relative;
+    height: 620px;
+    overflow: hidden;
+
+    color: white;
+}
+
+.hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-content {
+    position: absolute;
+
+    top: 50%;
+    left: 5%;
+
+    transform: translateY(-50%);
+}
+
+.hero-content p {
+    font-size: 36px;
+    letter-spacing: 4px;
+}
+
+.hero-content h2 {
+    font-size: 64px;
+    letter-spacing: 4px;
+    margin: 5px 0 25px;
+}
+
+.hero-content button {
+    border: none;
+    padding: 15px 25px;
+
+    background-color: rgba(255, 255, 255, 0.75);
+    color: #000;
+
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.hero-content button:hover {
+    background-color: #fff;
+}
+
+
+/* =========================
+   MAIN LAYOUT
+========================= */
+
+.container {
+    max-width: 1400px;
+
+    margin: 0 auto;
+    padding: 32px 20px;
+
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+
+/* =========================
+   BLOG POSTS
+========================= */
+
+.posts {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.post-card {
+    background-color: white;
+}
+
+.post-header {
+    text-align: center;
+    padding: 35px 20px 25px;
+}
+
+.post-header h2 {
+    font-size: 26px;
+    margin-bottom: 8px;
+}
+
+.post-header p {
+    font-size: 16px;
+}
+
+.post-header span {
+    color: #777;
+}
+
+.post-card > img {
+    width: 100%;
+    display: block;
+}
+
+.post-content {
+    padding: 25px;
+}
+
+.post-content p {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-top: 25px;
+}
+
+.post-actions button {
+    font-weight: bold;
+    padding: 10px 18px;
+    cursor: pointer;
+}
+
+.like-button {
+    background-color: white;
+    border: 1px solid #ccc;
+}
+
+.like-button:hover {
+    background-color: #f1f1f1;
+}
+
+.reply-button {
+    background-color: #000;
+    color: white;
+    border: none;
+}
+
+.reply-button span {
+    background-color: white;
+    color: black;
+
+    padding: 2px 8px;
+    margin-left: 8px;
+}
+
+
+
+.comments {
+    margin-top: 30px;
+    border-top: 1px solid #ddd;
+}
+
+.comment {
+    display: flex;
+    gap: 20px;
+
+    padding: 25px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.comment img {
+    width: 85px;
+    height: 85px;
+
+    object-fit: cover;
+}
+
+.comment h4 {
+    font-size: 18px;
+}
+
+.comment h4 span {
+    font-size: 14px;
+    color: #777;
+    font-weight: normal;
+    margin-left: 8px;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+
+
+.about-card {
+    background-color: #000;
+    color: white;
+}
+
+.about-card img {
+    width: 100%;
+    display: block;
+
+    height: 250px;
+    object-fit: cover;
+}
+
+.dark-content {
+    padding: 20px;
+}
+
+.dark-content h3 {
+    margin-bottom: 10px;
+    font-size: 22px;
+}
+
+
+
+.sidebar-section {
+    background-color: white;
+}
+
+.section-title {
+    background-color: #000;
+    color: white;
+
+    padding: 16px 20px;
+
+    font-size: 20px;
+    font-weight: normal;
+}
+
+
+
+.popular-post {
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 16px;
+    border-bottom: 1px solid #ddd;
+}
+
+.popular-post:hover {
+    background-color: #eee;
+}
+
+.popular-post img {
+    width: 60px;
+    height: 60px;
+
+    object-fit: cover;
+}
+
+.popular-post h4 {
+    font-size: 18px;
+    font-weight: normal;
+}
+
+.popular-post p {
+    font-size: 14px;
+}
+
+
+
+.advertisement {
+    margin: 16px;
+    height: 180px;
+
+    background-color: #f1f1f1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.tags {
+    padding: 18px;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tags span {
+    background-color: #eee;
+
+    padding: 3px 8px;
+    font-size: 13px;
+}
+
+.tags .active-tag {
+    background-color: #000;
+    color: #fff;
+}
+
+
+
+.inspiration-grid {
+    padding: 16px;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.inspiration-grid img {
+    width: 100%;
+    height: 150px;
+
+    object-fit: cover;
+}
+
+
+
+.follow-icons {
+    padding: 20px;
+    gap: 15px;
+}
+
+
+
+.subscribe-box p {
+    padding: 16px 16px 0;
+}
+
+.subscribe-box input {
+    width: calc(100% - 32px);
+
+    margin: 16px;
+    margin-bottom: 10px;
+
+    padding: 12px;
+    border: 1px solid #ccc;
+}
+
+.subscribe-box button {
+    width: calc(100% - 32px);
+
+    margin: 0 16px 20px;
+
+    padding: 12px;
+
+    border: none;
+    background-color: #f44336;
+    color: white;
+
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.subscribe-box button:hover {
+    background-color: #ccc;
+    color: #000;
+}
+
+
+
+footer {
+    background-color: #616161;
+    color: white;
+
+    padding: 45px 30px;
+}
+
+footer a {
+    display: inline-block;
+
+    background-color: #000;
+    color: white;
+
+    text-decoration: none;
+
+    padding: 12px 20px;
+}
+
+footer a:hover {
+    background-color: #ddd;
+    color: #000;
+}
+
+footer p {
+    margin-top: 25px;
+}
+
+
