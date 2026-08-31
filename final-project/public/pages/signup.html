@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign up — The Common Room</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=DM+Serif+Display&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
+    rel="stylesheet" />
+  <link href="../css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="split">
+    <div class="brand-panel">
+      <div class="brand-copy">
+        <h2>Join the Discourse</h2>
+        <p>Gain access to campus conversations, academic debates, and the rooms where students actually talk.</p>
+      </div>
+    </div>
+    <div class="form-panel">
+      <a class="back-row signup-back" href="../index.html">
+        <span class="material-symbols-outlined">arrow_back</span>
+        Back
+      </a>
+      <div class="form-wrap">
+        <div class="form-intro">
+          <h1>Create Account</h1>
+          <p>For students, faculty, and alumni.</p>
+        </div>
+        <form id="signup-form">
+          <div class="field">
+            <label for="email">Email</label>
+            <input class="editorial-input" id="email" name="email" placeholder="Enter your .edu email" required
+              type="email" />
+          </div>
+          <div class="field">
+            <label for="username">Username</label>
+            <input class="editorial-input" id="username" name="username" placeholder="Choose a username" required
+              type="text" />
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input class="editorial-input" id="password" name="password" placeholder="Create a password" required
+              type="password" />
+            <p class="field-error is-hidden" id="password-error">Password must be at least 8 characters long.</p>
+          </div>
+          <button class="btn-primary" type="submit">Create Account</button>
+          <p class="login-footer plain">
+            Already have an account? <a href="login.html">Sign in</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="../js/app.js"></script>
+</body>
+
+</html>

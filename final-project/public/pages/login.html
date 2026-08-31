@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign in — The Common Room</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=DM+Serif+Display&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
+    rel="stylesheet" />
+  <link href="../css/style.css" rel="stylesheet" />
+</head>
+
+<body class="auth-page">
+  <header class="auth-header">
+    <a class="back-link" href="../index.html">
+      <span class="material-symbols-outlined">arrow_back</span>
+      Return
+    </a>
+    <div class="wordmark">The Common Room</div>
+  </header>
+  <main class="login-main">
+    <div class="login-card">
+      <div class="login-intro">
+        <h1>Welcome Back</h1>
+        <p>Continue the discourse.</p>
+      </div>
+      <form class="login-form" id="login-form">
+        <div class="field">
+          <label for="email">University Email</label>
+          <input class="editorial-input" id="email" name="email" placeholder="scholar@university.edu" required
+            type="email" />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input class="editorial-input" id="password" name="password" placeholder="Enter your password" required
+            type="password" />
+        </div>
+        <button class="btn-primary" type="submit">
+          Sign In
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+      </form>
+      <div class="login-footer">
+        <p>New to the register? <a href="signup.html">Create an account</a></p>
+      </div>
+    </div>
+  </main>
+  <script src="../js/app.js"></script>
+</body>
+
+</html>
