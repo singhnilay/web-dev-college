@@ -6,7 +6,7 @@ I’d position it as a **college-only digital town square** rather than “Twitt
 
 ## 1. Product Overview
 
-### Working Name: **The Common Room**
+### Working Name: **UniHub**
 
 **The Common Room** is a private online community where college students can share thoughts, ask questions, discover campus updates, discuss ideas, and interact with other students.
 
