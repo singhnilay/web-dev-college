@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post — The Common Room</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=DM+Serif+Display&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
+    rel="stylesheet" />
+  <link href="../css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="feed.html">
+        <span class="brand-mark">C</span>
+        <h2 class="brand-name">The Common Room</h2>
+      </a>
+      <div class="topbar-actions">
+        <a class="btn-post" href="create-post.html">
+          <span class="material-symbols-outlined">edit</span>
+          Post
+        </a>
+        <a class="avatar" href="profile.html">JD</a>
+      </div>
+    </div>
+  </div>
+  <main class="page-narrow">
+    <a class="back-row" href="feed.html">
+      <span class="material-symbols-outlined">arrow_back</span>
+      Feed
+    </a>
+    <article class="post-card">
+      <div class="post-meta">
+        <a href="community.html">Questions</a>
+        <span>2h ago</span>
+      </div>
+      <h2>Does anyone know if the library annex is open past midnight during midterms?</h2>
+      <p class="post-body">Heard a rumor East Wing stays unlocked. Need a quiet desk that is not the dining hall. I
+        tried last Thursday and security waved me toward the annex but the inner door was locked. If someone has the
+        actual hours — or a staff name to email — drop it below.</p>
+      <div class="post-author">By <a href="profile.html">maya.r</a></div>
+      <div class="post-actions">
+        <button class="vote-btn" data-vote type="button">
+          <span class="material-symbols-outlined">keyboard_arrow_up</span>
+          <span data-count>24</span>
+        </button>
+        <span class="comment-count">
+          <span class="material-symbols-outlined">chat_bubble</span>
+          3
+        </span>
+      </div>
+    </article>
+    <h3 class="section-label comments-label">Comments</h3>
+    <form class="comment-form" id="comment-form">
+      <div class="field">
+        <label for="comment-body">Add a comment</label>
+        <textarea class="editorial-textarea" id="comment-body" placeholder="Keep it one level deep."
+          required></textarea>
+      </div>
+      <button class="btn-primary" type="submit">Comment</button>
+    </form>
+    <div class="comments" id="comment-list">
+      <article class="comment">
+        <div class="comment-head">
+          <span>you · 10m ago</span>
+          <button class="btn-delete" type="button" data-delete>Delete</button>
+        </div>
+        <p>East Wing annex is open until 2am during midterms. Bring ID.</p>
+      </article>
+      <article class="comment">
+        <div class="comment-head">
+          <span>priya.k · 1h ago</span>
+        </div>
+        <p>Confirmed. Desk lamps on the third floor still work. Avoid the first-floor couches.</p>
+      </article>
+      <article class="comment">
+        <div class="comment-head">
+          <span>anon student · 2h ago</span>
+        </div>
+        <p>Security will lock the inner door if you leave it propped. Don't prop it.</p>
+      </article>
+    </div>
+  </main>
+  <script src="../js/app.js"></script>
+</body>
+
+</html>
