@@ -1,5 +1,5 @@
 .landing-header {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -9,6 +9,17 @@
   align-items: center;
   gap: 0.75rem;
   z-index: 5;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.landing-header.is-scrolled {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.landing-header.is-scrolled .brand-name,
+.landing-header.is-scrolled a {
+  color: var(--text);
 }
 
 .landing-header .brand {
