@@ -6,6 +6,16 @@ var path = require("path");
 var PORT = 3000;
 var PUBLIC_DIR = path.join(__dirname, "public");
 var DATA_FILE = path.join(__dirname, "data", "users.json");
+var POSTS_FILE = path.join(__dirname, "data", "posts.json");
+
+var COMMUNITIES = [
+  "Campus Life",
+  "Academics",
+  "Events",
+  "Memes",
+  "Opportunities",
+  "Questions"
+];
 
 var MIME = {
   ".html": "text/html; charset=utf-8",
@@ -61,6 +71,23 @@ function serveStatic(req, res) {
   });
 }
 
+function readJsonArray(filePath) {
+  if (!fs.existsSync(filePath)) return [];
+  try {
+    var parsed = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (err) {
+    return [];
+  }
+}
+
+function appendJsonRecord(filePath, record) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  var records = readJsonArray(filePath);
+  records.push(record);
+  fs.writeFileSync(filePath, JSON.stringify(records, null, 2));
+}
+
 function saveSignup(req, res) {
   readBody(req, function (raw) {
     var payload;
@@ -77,19 +104,42 @@ function saveSignup(req, res) {
       password: String(payload.password || "")
     };
 
-    fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-    var users = [];
-    if (fs.existsSync(DATA_FILE)) {
-      try {
-        users = JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
-        if (!Array.isArray(users)) users = [];
-      } catch (err) {
-        users = [];
-      }
-    }
-    users.push(record);
-    fs.writeFileSync(DATA_FILE, JSON.stringify(users, null, 2));
+    appendJsonRecord(DATA_FILE, record);
     send(res, 201, JSON.stringify({ ok: true }), "application/json; charset=utf-8");
+  });
+}
+
+function savePost(req, res) {
+  readBody(req, function (raw) {
+    var payload;
+    try {
+      payload = JSON.parse(raw);
+    } catch (err) {
+      send(res, 400, "Invalid JSON");
+      return;
+    }
+
+    var record = {
+      id: Date.now().toString(),
+      title: String(payload.title || "").trim(),
+      community: String(payload.community || "").trim(),
+      content: String(payload.content || "").trim(),
+      anonymous: Boolean(payload.anonymous),
+      createdAt: new Date().toISOString()
+    };
+
+    if (!record.title || !record.community || !record.content) {
+      send(res, 400, "Title, community, and content are required.");
+      return;
+    }
+
+    if (COMMUNITIES.indexOf(record.community) === -1) {
+      send(res, 400, "Invalid community.");
+      return;
+    }
+
+    appendJsonRecord(POSTS_FILE, record);
+    send(res, 201, JSON.stringify({ ok: true, post: record }), "application/json; charset=utf-8");
   });
 }
 
@@ -104,6 +154,18 @@ var server = http.createServer(function (req, res) {
     }
     if (req.method === "POST") {
       saveSignup(req, res);
+      return;
+    }
+  }
+  if (pathname === "/api/posts") {
+    setCors(res);
+    if (req.method === "OPTIONS") {
+      res.writeHead(204);
+      res.end();
+      return;
+    }
+    if (req.method === "POST") {
+      savePost(req, res);
       return;
     }
   }
