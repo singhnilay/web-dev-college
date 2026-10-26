@@ -32,22 +32,24 @@
           <h1>Create Account</h1>
           <p>For students, faculty, and alumni.</p>
         </div>
-        <form id="signup-form">
+        <form id="signup-form" novalidate>
           <div class="field">
             <label for="email">Email</label>
-            <input class="editorial-input" id="email" name="email" placeholder="Enter your .edu email" required
-              type="email" />
+            <input class="editorial-input" id="email" name="email" placeholder="Enter your .edu email"
+              type="email" aria-describedby="email-error" />
+            <p class="field-error is-hidden" id="email-error"></p>
           </div>
           <div class="field">
             <label for="username">Username</label>
-            <input class="editorial-input" id="username" name="username" placeholder="Choose a username" required
-              type="text" />
+            <input class="editorial-input" id="username" name="username" placeholder="Choose a username"
+              type="text" aria-describedby="username-error" />
+            <p class="field-error is-hidden" id="username-error"></p>
           </div>
           <div class="field">
             <label for="password">Password</label>
-            <input class="editorial-input" id="password" name="password" placeholder="Create a password" required
-              type="password" />
-            <p class="field-error is-hidden" id="password-error">Password must be at least 8 characters long.</p>
+            <input class="editorial-input" id="password" name="password" placeholder="Create a password"
+              type="password" aria-describedby="password-error" />
+            <p class="field-error is-hidden" id="password-error"></p>
           </div>
           <button class="btn-primary" type="submit">Create Account</button>
           <p class="login-footer plain">

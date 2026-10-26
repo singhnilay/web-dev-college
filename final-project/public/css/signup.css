@@ -72,6 +72,10 @@
   width: 100%;
 }
 
+#signup-form .editorial-input.input-error {
+  border-color: var(--primary);
+}
+
 .login-footer {
   margin-top: 1.75rem;
   text-align: center;
