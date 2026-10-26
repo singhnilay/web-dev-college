@@ -91,7 +91,19 @@
         firstInvalid.focus();
         return;
       }
-      window.location.href = "login.html";
+
+      fetch("http://localhost:3000/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.value.trim(),
+          username: username.value.trim(),
+          password: password.value
+        })
+      }).then(function (response) {
+        if (!response.ok) return;
+        window.location.href = "login.html";
+      });
     });
   }
 
