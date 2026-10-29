@@ -9,8 +9,23 @@
   --border: #e8e4df;
   --notice: #f2efe9;
   --error-bg: #fce8e8;
+  --on-primary: #ffffff;
   --font-display: "DM Serif Display", serif;
   --font-ui: "DM Sans", sans-serif;
+}
+
+html.dark {
+  --primary: #9a2848;
+  --primary-hover: #b33456;
+  --background: #141210;
+  --surface: #1e1b18;
+  --text: #f4efe8;
+  --muted: #a89f98;
+  --accent: #c5d0d8;
+  --border: #3d362f;
+  --notice: #2a2520;
+  --error-bg: #3a2226;
+  --on-primary: #f7f5f2;
 }
 
 * {
@@ -95,7 +110,7 @@ img {
   width: 2rem;
   height: 2rem;
   background: var(--primary);
-  color: var(--surface);
+  color: var(--on-primary);
   display: grid;
   place-items: center;
   font-family: var(--font-display);
@@ -157,6 +172,22 @@ img {
   color: var(--text);
 }
 
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem;
+  padding: 0 0.85rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
 .btn-post {
   display: inline-flex;
   align-items: center;
@@ -164,7 +195,7 @@ img {
   height: 2.5rem;
   padding: 0 1rem;
   background: var(--primary);
-  color: var(--surface);
+  color: var(--on-primary);
   border: none;
   font-size: 0.8125rem;
   font-weight: 500;
@@ -209,7 +240,7 @@ img {
   justify-content: center;
   gap: 0.5rem;
   background: var(--primary);
-  color: var(--surface);
+  color: var(--on-primary);
   border: none;
   padding: 1rem 1.5rem;
   font-size: 0.9375rem;
@@ -236,7 +267,7 @@ img {
 
 .btn-ghost:hover {
   background: var(--text);
-  color: var(--surface);
+  color: var(--background);
 }
 
 .field {
@@ -273,7 +304,8 @@ img {
 
 .editorial-input::placeholder,
 .editorial-textarea::placeholder {
-  color: rgba(138, 129, 124, 0.5);
+  color: var(--muted);
+  opacity: 0.6;
 }
 
 .editorial-input:focus,
@@ -690,6 +722,12 @@ body.auth-page {
 
 .auth-header .back-link:hover {
   color: var(--primary);
+}
+
+.auth-header-end {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .auth-header .wordmark {

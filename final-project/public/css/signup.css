@@ -14,9 +14,20 @@
   padding: 3rem;
 }
 
+.signup-header {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  right: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
 .brand-copy {
   text-align: center;
-  color: #fff;
+  color: var(--on-primary);
 }
 
 .brand-copy h2 {
@@ -99,9 +110,7 @@
 }
 
 .signup-back {
-  position: absolute;
-  top: 1.25rem;
-  left: 1.25rem;
+  position: static;
 }
 
 @media (min-width: 480px) {
@@ -114,9 +123,10 @@
     margin-bottom: 2.25rem;
   }
 
-  .signup-back {
+  .signup-header {
     top: 2rem;
     left: 2rem;
+    right: 2rem;
   }
 }
 
