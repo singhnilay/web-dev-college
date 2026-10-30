@@ -1,65 +1,125 @@
-# The Common Room
+# 🏫 The Common Room
 
-**A digital campus community for conversations that matter.**
+### Your campus. Your people. Your conversations.
 
-The Common Room is a college-focused community platform designed to bring campus conversations into one organized space. Instead of important questions, event updates, academic discussions, and campus moments getting buried in noisy group chats, students can explore topic-based communities, browse a shared feed, and engage with posts.
+**The Common Room** is a digital hangout for college life — a place to ask the questions you’re too shy to ask in the class group, find out what’s happening around campus, share opportunities, drop a meme, or start a proper discussion.
 
-The project follows the product direction described in [PRD.md](./PRD.md): a campus “digital town square” combining community-based discussions with a social feed, styled as a modern campus editorial rather than a clone of an existing social network.
+Think of it as your college’s **digital common room**: part community board, part student feed, and very much *not another chaotic WhatsApp group*.
 
-## Product goals
+> 💬 **One digital space where the entire campus can talk.**
 
-- Give students one place to ask questions, share updates, and start discussions.
-- Organize campus posts around communities and topics.
-- Help useful conversations stand out through sorting and upvotes.
-- Offer a welcoming, readable interface across desktop and mobile.
+---
 
-## Features and interface
+## ✨ What's inside?
 
-The current project includes front-end pages and interactions for the following areas:
+| 🧩 Space | 💡 What's the vibe? |
+|---|---|
+| 🏡 **Campus Life** | Everything happening around campus, big or small. |
+| 📚 **Academics** | Notes, doubts, resources, and the occasional academic SOS. |
+| 🎉 **Events** | Find events, announcements, and things worth leaving your room for. |
+| 😂 **Memes** | Because college life is a little unserious sometimes. |
+| 🚀 **Opportunities** | Internships, research, competitions, and other cool finds. |
+| 🙋 **Questions** | Ask away. Someone probably has the answer. |
 
-- **Landing page** — introduces the platform and directs visitors to sign in or join.
-- **Sign-up and login pages** — provides the entry points for users.
-- **Campus feed** — presents sample posts with feed controls, search, and sorting.
-- **Communities** — groups discussions into topics such as Campus Life, Academics, Events, Memes, Opportunities, and Questions.
-- **Post detail and create-post pages** — UI for reading a discussion and composing a post.
-- **User profiles** — a dedicated profile interface.
-- **Feed interactions** — client-side post filtering, sorting, and upvote-count toggling.
-- **Responsive navigation** — a collapsible mobile menu.
-- **Visual design** — warm neutral surfaces, a burgundy-style editorial direction, and DM Serif Display / DM Sans typography.
+### 🛠️ What you can explore
 
-> **Implementation note:** The repository currently contains a static front-end built with HTML, CSS, and vanilla JavaScript. The sign-up form performs client-side password-length validation, and feed interactions are client-side demonstrations. A persistent backend, database-backed accounts, and server-side post/comment operations are not configured in the current project.
+- 📰 **Campus feed** — browse posts from different communities.
+- 🔥 **Feed sorting** — switch between Trending, New, and Top.
+- 🔎 **Search** — find posts by matching their content.
+- ⬆️ **Upvotes** — give a post a little boost.
+- ✍️ **Create a post** — choose a community and share what's on your mind.
+- 👤 **Profiles** — dedicated spaces for student profiles.
+- 🌗 **Dark mode** — for the late-night scrollers.
+- 📱 **Responsive layout** — works across desktop and mobile screens.
 
-## Tech stack
+*Some screens and interactions are currently prototype/demo experiences. See [What's working right now?](#-whats-working-right-now) for the honest status.*
 
-- **HTML5** for page structure
-- **CSS3** for layout, visual styling, and responsive behavior
-- **Vanilla JavaScript** for client-side interactions
-- **Google Fonts** — DM Serif Display and DM Sans
+---
 
-No frontend framework or package manager is required for the current static version.
+## 🎨 The look & feel
 
-## Project structure
+We went for **modern campus editorial** — imagine a student magazine met a community noticeboard and they decided to build an app together.
+
+- 🥛 Warm cream backgrounds instead of sterile white.
+- 🍷 Deep burgundy accents for a little character.
+- 📰 DM Serif Display headings paired with clean DM Sans interface text.
+- 🧼 Spacious layouts that keep conversations easy to read.
+
+The idea: a product that feels welcoming, thoughtful, and just playful enough.
+
+---
+
+## 🧰 Built with
+
+| Tech | Job |
+|---|---|
+| **HTML5** | Page structure |
+| **CSS3** | Styling and responsive layouts |
+| **Vanilla JavaScript** | Front-end interactions |
+| **Node.js (built-in HTTP module)** | Small local server and API endpoints |
+| **JSON files** | Simple local storage for signup and post records |
+
+No React, no framework avalanche. Just the fundamentals doing their thing. 🤝
+
+---
+
+## 🚀 Get it running
+
+Ready to take a look? Let's go.
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/singhnilay/web-dev-college.git
+cd web-dev-college/final-project
+```
+
+### 2. Start the local server
+
+You’ll need **Node.js** installed. From the `final-project` directory, run:
+
+```bash
+node server.js
+```
+
+The server starts at:
+
+👉 **http://localhost:3000**
+
+### 3. Open the app
+
+Visit [http://localhost:3000](http://localhost:3000) in your browser. The server serves the files inside `public/` and handles the project's current API endpoints.
+
+### 4. Want to serve only the static pages?
+
+You can also open `public/index.html` directly, or use a simple local server:
+
+```bash
+cd public
+python3 -m http.server 8000
+```
+
+Then head to [http://localhost:8000](http://localhost:8000).
+
+> ⚠️ The create-post flow sends requests to `http://localhost:3000/api/posts`, so run the Node server for that flow. Opening the pages with a static server alone won't provide the API.
+
+---
+
+## 🗂️ Project map
+
+Here's where the magic lives:
 
 ```text
 final-project/
-├── PRD.md
-├── README.md
-├── public/
-│   ├── index.html
-│   ├── css/
-│   │   ├── style.css
-│   │   ├── index.css
-│   │   ├── login.css
-│   │   ├── signup.css
-│   │   ├── community.css
-│   │   ├── create-post.css
-│   │   ├── post.css
-│   │   └── profile.css
-│   ├── js/
-│   │   ├── app.js
-│   │   ├── index.js
-│   │   └── signup.js
-│   └── pages/
+├── 📄 README.md
+├── 📄 PRD.md
+├── 🟨 server.js             # Local HTTP server + API endpoints
+├── 📁 data/                 # JSON data files (created as records are saved)
+├── 📁 public/
+│   ├── 🏠 index.html        # Landing page
+│   ├── 📁 css/              # Page styles
+│   ├── 📁 js/               # Front-end JavaScript
+│   └── 📁 pages/
 │       ├── login.html
 │       ├── signup.html
 │       ├── feed.html
@@ -67,83 +127,50 @@ final-project/
 │       ├── create-post.html
 │       ├── post.html
 │       └── profile.html
-└── reference/
-    ├── campus_feed/
-    ├── event_directory/
-    ├── login_page/
-    └── signup_page/
+└── 📁 reference/            # Design and inspiration references
 ```
 
-## Run locally
+---
 
-Since this is a static website, you can run it without installing dependencies.
+## 🧪 What's working right now?
 
-1. Clone the repository:
+A README should set expectations, not sell imaginary features. Here's the current state of the project:
 
-   ```bash
-   git clone https://github.com/singhnilay/web-dev-college.git
-   ```
+| Feature | Current status |
+|---|---|
+| Landing page and navigation | ✅ Implemented |
+| Login / signup screens | ✅ UI implemented |
+| Signup form | 🧪 Client-side validation + local API record write |
+| Feed, community, post, and profile screens | ✅ UI pages present |
+| Feed search, sorting, and upvote toggle | ✅ Client-side interactions |
+| Create-post form | 🧪 Validates input and saves a post through the local API |
+| Persistent database and secure authentication | 🚧 Not implemented |
+| Full comments, account sessions, and production moderation | 🚧 Not implemented |
 
-2. Move into the project directory:
+**A quick heads-up:** the current server writes signup and post records to JSON files under `data/`. It is a learning-project implementation, not production-ready authentication or secure user-data storage. The login screen is present, but a complete login/session system is not wired up yet.
 
-   ```bash
-   cd web-dev-college/final-project
-   ```
+---
 
-3. Open `public/index.html` in your browser.
+## 🧭 Where the project could go next
 
-For a more consistent local development experience, serve the `public` directory with a simple local HTTP server. For example, if Python 3 is installed:
+The product direction is documented in [PRD.md](./PRD.md). Some possible next quests:
 
-```bash
-cd public
-python3 -m http.server 8000
-```
+- 🔐 Build proper authentication and user sessions.
+- 🗃️ Move users and posts from JSON files to a database.
+- 💬 Bring comments and post discussions to life.
+- 🏘️ Make communities dynamic, with their own feeds.
+- 🖼️ Add image uploads and saved posts.
+- 🚩 Add reporting and moderation tools.
+- ✨ Polish accessibility, validation, and loading/error states.
 
-Then visit [http://localhost:8000](http://localhost:8000).
+One step at a time. We’re building a common room, not the entire internet. 😌
 
-## Usage
+---
 
-1. Open the landing page.
-2. Use **Join the room** or **Sign in** to explore the authentication screens.
-3. Browse the campus feed and community pages.
-4. Try the available client-side search, sort, and upvote interactions.
-5. Explore post details and profile layouts.
+## 🎓 About this project
 
-Because this version is a front-end prototype, form submissions and interactions do not represent persistent account or community data.
+Made as a **college web development project** to explore how a campus community platform could look and work — from the UI and responsive layouts to basic JavaScript interactions and a small Node.js server.
 
-## Design direction
+Have feedback, ideas, or a feature you think belongs in the Common Room? Open an issue or start a discussion!
 
-The interface takes a **modern campus editorial** approach: part student magazine, part community space, and part campus noticeboard.
-
-- **Warm background:** `#F7F5F2`
-- **Primary text:** `#1C1C1C`
-- **Secondary text:** `#6B6B6B`
-- **Card surfaces:** `#FFFFFF`
-- **Borders:** `#E8E4DF`
-- **Typography:** DM Serif Display for expressive headings and DM Sans for interface text
-
-The goal is to keep the product minimal, approachable, and focused on campus conversations.
-
-## Roadmap
-
-The PRD describes a fuller MVP. Potential next steps include:
-
-- Connect authentication to a backend and persist user profiles.
-- Add a database for users, communities, posts, upvotes, and comments.
-- Implement create, edit, and delete operations with authorization.
-- Persist feed sorting and voting state.
-- Add post comments and community-specific feeds.
-- Add validation, loading/error states, accessibility checks, and further responsive testing.
-- Consider optional features such as anonymous posts, saved posts, image uploads, search across users/communities, and reporting after the core flow is complete.
-
-The proposed product requirements and future backend outline are documented in [PRD.md](./PRD.md). Planned functionality should not be taken as implemented until it is connected and tested end to end.
-
-## Project status
-
-**Current stage:** Static front-end prototype for a web development college final project.
-
-The UI provides a foundation for the broader product idea. Database persistence, production authentication, and backend API routes remain future implementation work.
-
-## License
-
-No license has been specified yet. Add a `LICENSE` file if you intend to publish the project for reuse.
+**Now grab a chai, pull up a chair, and join the room.** ☕
