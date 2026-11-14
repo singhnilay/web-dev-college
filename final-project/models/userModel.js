@@ -1,87 +1,67 @@
 "use strict";
 
+var mongoose = require("mongoose");
 var bcrypt = require("bcryptjs");
 var config = require("../config");
-var jsonStore = require("./jsonStore");
 
-var BCRYPT_PREFIX = /^\$2[aby]\$\d{2}\$/;
+var userSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      required: [true, "Username is required."],
+      trim: true,
+      minlength: [3, "Username must be at least 3 characters."],
+      maxlength: [20, "Username must be at most 20 characters."],
+      match: [/^[a-zA-Z0-9_]+$/, "Username may contain letters, numbers, and underscores only."]
+    },
+    email: {
+      type: String,
+      required: [true, "Email is required."],
+      trim: true,
+      lowercase: true,
+      match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Enter a valid email address."]
+    },
+    password: {
+      type: String,
+      required: [true, "Password is required."],
+      minlength: [8, "Password must be at least 8 characters long."],
+      select: false
+    },
+    bio: {
+      type: String,
+      trim: true,
+      default: "",
+      maxlength: [500, "Bio must be at most 500 characters."]
+    },
+    profileImage: {
+      type: String,
+      trim: true,
+      default: ""
+    }
+  },
+  { timestamps: true }
+);
 
-function isHashed(value) {
-  return typeof value === "string" && BCRYPT_PREFIX.test(value);
-}
+userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ username: 1 }, { unique: true });
 
-function readUsers() {
-  return jsonStore.readJsonArray(config.USERS_FILE);
-}
-
-function findByEmail(email) {
-  var needle = String(email || "").trim().toLowerCase();
-  return readUsers().find(function (user) {
-    return String(user.email || "").toLowerCase() === needle;
-  });
-}
+userSchema.set("toJSON", {
+  transform: function (_doc, ret) {
+    delete ret.password;
+    delete ret.__v;
+    return ret;
+  }
+});
 
 function hashPassword(plain) {
   return bcrypt.hash(plain, config.BCRYPT_ROUNDS);
 }
 
 function passwordsMatch(plain, stored) {
-  if (isHashed(stored)) {
-    return bcrypt.compare(plain, stored);
-  }
-  return Promise.resolve(stored === plain);
+  return bcrypt.compare(plain, stored);
 }
 
-function createUser(record) {
-  return jsonStore.appendJsonRecord(config.USERS_FILE, record);
-}
+userSchema.statics.hashPassword = hashPassword;
+userSchema.statics.passwordsMatch = passwordsMatch;
 
-function hashLegacyPasswords() {
-  var users = readUsers();
-  var pending = [];
-  var changed = false;
-
-  users.forEach(function (user, index) {
-    if (isHashed(user.password)) return;
-    changed = true;
-    pending.push(
-      hashPassword(String(user.password || "")).then(function (hash) {
-        users[index].password = hash;
-      })
-    );
-  });
-
-  if (!changed) return Promise.resolve(false);
-
-  return Promise.all(pending).then(function () {
-    jsonStore.writeJsonArray(config.USERS_FILE, users);
-    return true;
-  });
-}
-
-function upgradePasswordIfNeeded(email, plain, stored) {
-  if (isHashed(stored)) return Promise.resolve();
-
-  return hashPassword(plain).then(function (hash) {
-    var users = readUsers();
-    var needle = String(email || "").trim().toLowerCase();
-    var updated = false;
-    users.forEach(function (user) {
-      if (String(user.email || "").toLowerCase() === needle && !isHashed(user.password)) {
-        user.password = hash;
-        updated = true;
-      }
-    });
-    if (updated) jsonStore.writeJsonArray(config.USERS_FILE, users);
-  });
-}
-
-module.exports = {
-  readUsers: readUsers,
-  findByEmail: findByEmail,
-  hashPassword: hashPassword,
-  passwordsMatch: passwordsMatch,
-  createUser: createUser,
-  hashLegacyPasswords: hashLegacyPasswords,
-  upgradePasswordIfNeeded: upgradePasswordIfNeeded
-};
+module.exports = mongoose.model("User", userSchema);

@@ -2,13 +2,16 @@
 
 var express = require("express");
 var config = require("./config");
+var connectDb = require("./config/db");
 var corsMiddleware = require("./middleware/cors");
 var errorHandler = require("./middleware/errorHandler");
-var userModel = require("./models/userModel");
 var healthRoutes = require("./routes/healthRoutes");
 var signupRoutes = require("./routes/signupRoutes");
 var loginRoutes = require("./routes/loginRoutes");
-var postRoutes = require("./routes/postRoutes");
+var usersRoutes = require("./routes/usersRoutes");
+var postsRoutes = require("./routes/postsRoutes");
+var commentsRoutes = require("./routes/commentsRoutes");
+var communitiesRoutes = require("./routes/communitiesRoutes");
 
 var app = express();
 
@@ -20,21 +23,23 @@ app.use(errorHandler.jsonParseError);
 app.use("/api/health", healthRoutes);
 app.use("/api/signup", signupRoutes);
 app.use("/api/login", loginRoutes);
-app.use("/api/posts", postRoutes);
+app.use("/api/users", usersRoutes);
+app.use("/api/posts", postsRoutes);
+app.use("/api/comments", commentsRoutes);
+app.use("/api/communities", communitiesRoutes);
 
 app.use(express.static(config.PUBLIC_DIR));
 
 app.use(errorHandler.errorHandler);
 
-userModel.hashLegacyPasswords().then(function (upgraded) {
-  if (upgraded) {
-    console.log("Existing account passwords hashed.");
-  }
-  app.listen(config.PORT, function () {
-    console.log("http://localhost:" + config.PORT);
+connectDb()
+  .then(function () {
+    app.listen(config.PORT, function () {
+      console.log("http://localhost:" + config.PORT);
+    });
+  })
+  .catch(function (err) {
+    console.error("Could not connect to MongoDB Atlas. Server not started.");
+    console.error(err.message || err);
+    process.exit(1);
   });
-}).catch(function (err) {
-  console.error("Could not prepare user data.");
-  console.error(err);
-  process.exit(1);
-});

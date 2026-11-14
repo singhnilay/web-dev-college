@@ -23,8 +23,8 @@
         })
       }).then(function (response) {
         if (!response.ok) {
-          return response.text().then(function (message) {
-            throw new Error(message || "Could not sign in.");
+          return response.json().then(function (body) {
+            throw new Error((body && body.error) || "Could not sign in.");
           });
         }
         window.location.href = "community.html";
