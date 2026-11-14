@@ -2,16 +2,31 @@
   {
     "email": "garv@campus.edu",
     "username": "garv_user",
-    "password": "password1"
+    "password": "$2b$10$6/YAzQ5f0gk7.S2RNkuuu.NBl7lHjMB1ilNbKwfsN6r4EduQhtLw."
   },
   {
     "email": "garvbhalla1702@gmail.com",
     "username": "iLoveGovindSir",
-    "password": "iLoveSameerYadav"
+    "password": "$2b$10$KJkPn366ANuCvkZURanfjekDF6EKibZy5wobuoMHBUNPuDU5gMwIu"
   },
   {
     "email": "yash.yadav.25cse@bmu.edu.in",
     "username": "iLoveAnkitSir",
-    "password": "iLoveNilay"
+    "password": "$2b$10$8y9QLwO84OifOS4yUJLd0uhAmEYemWHIxXEiViYmKQwfaVGluevDy"
+  },
+  {
+    "email": "nilay@gmail.com",
+    "username": "hellonilay",
+    "password": "$2b$10$Davray0W.lwbJZCBuZWIselDmFeTbOGElp6RURgUSR9p/W2uUnVVe"
+  },
+  {
+    "email": "iLoveGovindSir@gmail.com",
+    "username": "hello_govind_sir",
+    "password": "$2b$10$tdO2Z1iTgyyXH/QzhiJA6u9He738dfj/vl92r2WqAIouYaKrZlIX."
+  },
+  {
+    "email": "brtbr@cec.com",
+    "username": "rbyrbyr",
+    "password": "$2b$10$AQnClgQf7Wu6E619ZO71fuWN8j22x2OjYUCMPQVqBN/oxgEfuPj.K"
   }
 ]

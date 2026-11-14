@@ -27,46 +27,51 @@ The current project includes front-end pages and interactions for the following 
 - **Responsive navigation** — a collapsible mobile menu.
 - **Visual design** — warm neutral surfaces, a burgundy-style editorial direction, and DM Serif Display / DM Sans typography.
 
-> **Implementation note:** The repository currently contains a static front-end built with HTML, CSS, and vanilla JavaScript. The sign-up form performs client-side password-length validation, and feed interactions are client-side demonstrations. A persistent backend, database-backed accounts, and server-side post/comment operations are not configured in the current project.
+> **Implementation note:** The front-end is HTML, CSS, and vanilla JavaScript. Express serves those files and the existing `/api/signup`, `/api/login`, and `/api/posts` endpoints. Feed search, sort, and upvote interactions remain client-side. MongoDB, sessions, and production authentication are not part of this milestone.
 
 ## Tech stack
 
 - **HTML5** for page structure
 - **CSS3** for layout, visual styling, and responsive behavior
 - **Vanilla JavaScript** for client-side interactions
+- **Node.js** and **Express** for the HTTP server and APIs
 - **Google Fonts** — DM Serif Display and DM Sans
-
-No frontend framework or package manager is required for the current static version.
 
 ## Project structure
 
 ```text
 final-project/
+├── server.js
+├── package.json
 ├── PRD.md
 ├── README.md
+├── config/
+│   └── index.js
+├── controllers/
+│   ├── healthController.js
+│   ├── signupController.js
+│   ├── loginController.js
+│   └── postController.js
+├── middleware/
+│   ├── cors.js
+│   └── errorHandler.js
+├── models/
+│   ├── jsonStore.js
+│   ├── userModel.js
+│   └── postModel.js
+├── routes/
+│   ├── healthRoutes.js
+│   ├── signupRoutes.js
+│   ├── loginRoutes.js
+│   └── postRoutes.js
+├── data/
+│   ├── users.json
+│   └── posts.json
 ├── public/
 │   ├── index.html
 │   ├── css/
-│   │   ├── style.css
-│   │   ├── index.css
-│   │   ├── login.css
-│   │   ├── signup.css
-│   │   ├── community.css
-│   │   ├── create-post.css
-│   │   ├── post.css
-│   │   └── profile.css
 │   ├── js/
-│   │   ├── app.js
-│   │   ├── index.js
-│   │   └── signup.js
 │   └── pages/
-│       ├── login.html
-│       ├── signup.html
-│       ├── feed.html
-│       ├── community.html
-│       ├── create-post.html
-│       ├── post.html
-│       └── profile.html
 └── reference/
     ├── campus_feed/
     ├── event_directory/
@@ -76,30 +81,20 @@ final-project/
 
 ## Run locally
 
-Since this is a static website, you can run it without installing dependencies.
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/singhnilay/web-dev-college.git
-   ```
-
-2. Move into the project directory:
-
-   ```bash
-   cd web-dev-college/final-project
-   ```
-
-3. Open `public/index.html` in your browser.
-
-For a more consistent local development experience, serve the `public` directory with a simple local HTTP server. For example, if Python 3 is installed:
-
 ```bash
-cd public
-python3 -m http.server 8000
+git clone https://github.com/singhnilay/web-dev-college.git
+cd web-dev-college/final-project
+npm install
+npm start
 ```
 
-Then visit [http://localhost:8000](http://localhost:8000).
+For auto-reload during development:
+
+```bash
+npm run dev
+```
+
+Visit [http://localhost:3000](http://localhost:3000). Check [http://localhost:3000/api/health](http://localhost:3000/api/health) to confirm the server is running.
 
 ## Usage
 
@@ -109,7 +104,7 @@ Then visit [http://localhost:8000](http://localhost:8000).
 4. Try the available client-side search, sort, and upvote interactions.
 5. Explore post details and profile layouts.
 
-Because this version is a front-end prototype, form submissions and interactions do not represent persistent account or community data.
+Sign-up and login still use the existing `/api/signup` and `/api/login` routes and write to `data/users.json`. New and existing passwords are stored as bcrypt hashes, not plaintext. Create-post still posts to `/api/posts`. Feed and voting interactions remain client-side demonstrations.
 
 ## Design direction
 
@@ -140,9 +135,9 @@ The proposed product requirements and future backend outline are documented in [
 
 ## Project status
 
-**Current stage:** Static front-end prototype for a web development college final project.
+**Current stage:** Front-end prototype with an Express server that serves static pages and the existing sign-up, login, and post-creation APIs. MongoDB is not connected yet.
 
-The UI provides a foundation for the broader product idea. Database persistence, production authentication, and backend API routes remain future implementation work.
+The UI provides a foundation for the broader product idea. Database persistence and production-ready authentication remain future implementation work.
 
 ## License
 

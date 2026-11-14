@@ -22,6 +22,7 @@
     var emailError = document.getElementById("email-error");
     var usernameError = document.getElementById("username-error");
     var passwordError = document.getElementById("password-error");
+    var submitError = document.getElementById("signup-submit-error");
 
     function setError(input, errorEl, message) {
       if (!input || !errorEl) return;
@@ -92,7 +93,9 @@
         return;
       }
 
-      fetch("http://localhost:3000/api/signup", {
+      submitError.textContent = "";
+      submitError.classList.add("is-hidden");
+      fetch("/api/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -101,8 +104,15 @@
           password: password.value
         })
       }).then(function (response) {
-        if (!response.ok) return;
-        window.location.href = "login.html";
+        if (!response.ok) {
+          return response.text().then(function (message) {
+            throw new Error(message || "Could not create account.");
+          });
+        }
+        window.location.href = "community.html";
+      }).catch(function (error) {
+        submitError.textContent = error.message || "Could not connect to server.";
+        submitError.classList.remove("is-hidden");
       });
     });
   }
