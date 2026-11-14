@@ -210,7 +210,7 @@ A README should set expectations, not sell imaginary features. Here's the curren
 
 ## MongoDB Atlas and REST APIs
 
-Atlas is the only persistent store. `server.js` loads `dotenv`, reads `MONGODB_URI`, and calls `mongoose.connect` before `app.listen`. Connection errors or a missing URI stop the process.
+Atlas is the only persistent store. `config/index.js` loads `.env` with `dotenv`. `server.js` then calls `connectDb()` (`mongoose.connect`) and only runs `app.listen` after that promise resolves. A missing `MONGODB_URI` or a failed Atlas connection logs an error and exits with code 1; the HTTP server never starts.
 
 ### Collections and relationships
 

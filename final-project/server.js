@@ -8,12 +8,16 @@ var errorHandler = require("./middleware/errorHandler");
 var healthRoutes = require("./routes/healthRoutes");
 var signupRoutes = require("./routes/signupRoutes");
 var loginRoutes = require("./routes/loginRoutes");
-var usersRoutes = require("./routes/usersRoutes");
+const usersRoutes = require("./routes/usersRoutes");
 var postsRoutes = require("./routes/postsRoutes");
 var commentsRoutes = require("./routes/commentsRoutes");
 var communitiesRoutes = require("./routes/communitiesRoutes");
 
 var app = express();
+app.use(function (req, res, next) {
+  console.log("INCOMING REQUEST:", req.method, req.originalUrl);
+  next();
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -27,6 +31,13 @@ app.use("/api/users", usersRoutes);
 app.use("/api/posts", postsRoutes);
 app.use("/api/comments", commentsRoutes);
 app.use("/api/communities", communitiesRoutes);
+
+console.log("USERS ROUTES MOUNTED");
+
+app.use(function (req, res, next) {
+  console.log("REQUEST:", req.method, req.originalUrl);
+  next();
+});
 
 app.use(express.static(config.PUBLIC_DIR));
 
