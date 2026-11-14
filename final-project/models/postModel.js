@@ -53,4 +53,15 @@ postSchema.set("toJSON", {
   }
 });
 
+postSchema.statics.createPost = function (record) {
+  return this.create(record);
+};
+
+postSchema.statics.listPosts = function () {
+  return this.find()
+    .sort({ createdAt: -1 })
+    .populate("author", "username email bio profileImage createdAt")
+    .populate("community", "name icon");
+};
+
 module.exports = mongoose.model("Post", postSchema);

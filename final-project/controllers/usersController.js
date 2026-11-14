@@ -51,7 +51,10 @@ var updateUser = asyncHandler(function (req, res) {
   var payload = req.body || {};
   var updates = {};
 
-  if (payload.username != null) updates.username = String(payload.username).trim();
+  if (payload.username != null) {
+    updates.username = String(payload.username).trim();
+    updates.usernameLower = updates.username.toLowerCase();
+  }
   if (payload.email != null) updates.email = String(payload.email).trim();
   if (payload.bio != null) updates.bio = String(payload.bio);
   if (payload.profileImage != null) updates.profileImage = String(payload.profileImage);

@@ -14,6 +14,12 @@ var userSchema = new mongoose.Schema(
       maxlength: [20, "Username must be at most 20 characters."],
       match: [/^[a-zA-Z0-9_]+$/, "Username may contain letters, numbers, and underscores only."]
     },
+    usernameLower: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true
+    },
     email: {
       type: String,
       required: [true, "Email is required."],
@@ -43,11 +49,17 @@ var userSchema = new mongoose.Schema(
 );
 
 userSchema.index({ email: 1 }, { unique: true });
-userSchema.index({ username: 1 }, { unique: true });
+userSchema.index({ usernameLower: 1 }, { unique: true });
+
+userSchema.pre("validate", function (next) {
+  if (this.username) this.usernameLower = String(this.username).trim().toLowerCase();
+  next();
+});
 
 userSchema.set("toJSON", {
   transform: function (_doc, ret) {
     delete ret.password;
+    delete ret.usernameLower;
     delete ret.__v;
     return ret;
   }
@@ -63,5 +75,17 @@ function passwordsMatch(plain, stored) {
 
 userSchema.statics.hashPassword = hashPassword;
 userSchema.statics.passwordsMatch = passwordsMatch;
+
+userSchema.statics.findByEmail = function (email) {
+  return this.findOne({ email: String(email || "").trim().toLowerCase() }).select("+password");
+};
+
+userSchema.statics.findByUsernameLower = function (username) {
+  return this.findOne({ usernameLower: String(username || "").trim().toLowerCase() });
+};
+
+userSchema.statics.createUser = function (record) {
+  return this.create(record);
+};
 
 module.exports = mongoose.model("User", userSchema);

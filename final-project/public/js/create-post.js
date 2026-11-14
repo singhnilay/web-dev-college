@@ -55,8 +55,9 @@
 
       if (submitBtn) submitBtn.disabled = true;
 
-      fetch("http://localhost:3000/api/posts", {
+      fetch("/api/posts", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: titleValue,
@@ -66,13 +67,25 @@
         })
       })
         .then(function (response) {
+          if (response.status === 401) {
+            window.location.href = "login.html";
+            return;
+          }
           if (!response.ok) {
-            throw new Error("Could not publish this post.");
+            return response.text().then(function (text) {
+              try {
+                var data = JSON.parse(text);
+                throw new Error(data.error || "Could not publish this post.");
+              } catch (err) {
+                if (err instanceof Error && err.message) throw err;
+                throw new Error("Could not publish this post.");
+              }
+            });
           }
           window.location.href = "feed.html";
         })
-        .catch(function () {
-          showError("Could not save the post. Make sure the local server is running.");
+        .catch(function (error) {
+          showError(error.message || "Could not save the post. Make sure the local server is running.");
           if (submitBtn) submitBtn.disabled = false;
         });
     });

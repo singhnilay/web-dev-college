@@ -11,6 +11,7 @@ function jsonParseError(err, req, res, next) {
 function duplicateField(err) {
   if (!err || !err.keyValue) return "A record with that unique field already exists.";
   var field = Object.keys(err.keyValue)[0];
+  if (field === "usernameLower") field = "username";
   return field + " is already in use.";
 }
 

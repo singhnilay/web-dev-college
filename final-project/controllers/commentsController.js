@@ -27,8 +27,9 @@ var getComment = asyncHandler(function (req, res) {
 
 var createComment = asyncHandler(function (req, res) {
   var payload = req.body || {};
+  var authorId = req.user && req.user.id ? req.user.id : payload.author;
   return Promise.all([
-    refs.requireExisting(User, payload.author, "Author"),
+    refs.requireExisting(User, authorId, "Author"),
     refs.requireExisting(Post, payload.post, "Post")
   ]).then(function (results) {
     return Comment.create({

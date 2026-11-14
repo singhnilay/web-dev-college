@@ -42,8 +42,9 @@ var getPost = asyncHandler(function (req, res) {
 var createPost = asyncHandler(function (req, res) {
   var payload = req.body || {};
   var upvotes = refs.parseIdList(payload.upvotes, "upvotes");
+  var authorId = req.user && req.user.id ? req.user.id : payload.author;
   return Promise.all([
-    refs.requireExisting(User, payload.author, "Author"),
+    refs.requireExisting(User, authorId, "Author"),
     resolveCommunity(payload.community),
     refs.requireUsers(upvotes)
   ]).then(function (results) {
@@ -54,7 +55,7 @@ var createPost = asyncHandler(function (req, res) {
       content: String(payload.content || "").trim(),
       author: author._id,
       community: community._id,
-      anonymous: Boolean(payload.anonymous),
+      anonymous: Boolean(payload.anonymous || payload.isAnonymous),
       upvotes: upvotes
     });
   }).then(function (post) {
@@ -71,7 +72,9 @@ var updatePost = asyncHandler(function (req, res) {
 
   if (payload.title != null) updates.title = String(payload.title).trim();
   if (payload.content != null) updates.content = String(payload.content).trim();
-  if (payload.anonymous != null) updates.anonymous = Boolean(payload.anonymous);
+  if (payload.anonymous != null || payload.isAnonymous != null) {
+    updates.anonymous = Boolean(payload.anonymous || payload.isAnonymous);
+  }
 
   if (payload.author != null) {
     jobs.push(

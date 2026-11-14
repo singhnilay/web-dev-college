@@ -100,6 +100,21 @@
     });
   }
 
+  function initLogout() {
+    document.querySelectorAll("[data-logout]").forEach(function (link) {
+      link.addEventListener("click", function (event) {
+        event.preventDefault();
+        var href = link.getAttribute("href") || "../index.html";
+        fetch("/api/auth/logout", {
+          method: "POST",
+          credentials: "include"
+        }).finally(function () {
+          window.location.href = href;
+        });
+      });
+    });
+  }
+
   function initLanding() {
     var header = document.querySelector(".landing-header");
     var hero = document.querySelector(".hero");
@@ -120,6 +135,7 @@
     initSearch();
     initSort();
     initVotes();
+    initLogout();
     initLanding();
   });
 })();

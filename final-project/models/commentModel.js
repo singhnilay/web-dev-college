@@ -34,4 +34,14 @@ commentSchema.set("toJSON", {
   }
 });
 
+commentSchema.statics.createComment = function (record) {
+  return this.create(record);
+};
+
+commentSchema.statics.listByPost = function (postId) {
+  return this.find({ post: postId })
+    .sort({ createdAt: 1 })
+    .populate("author", "username createdAt");
+};
+
 module.exports = mongoose.model("Comment", commentSchema);

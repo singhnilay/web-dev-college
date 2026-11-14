@@ -1,10 +1,10 @@
 "use strict";
 
 var express = require("express");
-var signupController = require("../controllers/signupController");
+var authController = require("../controllers/authController");
 
 var router = express.Router();
 
-router.post("/", signupController.signup);
+router.post("/", authController.register);
 
 module.exports = router;

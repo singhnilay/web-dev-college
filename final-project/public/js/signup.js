@@ -95,8 +95,9 @@
 
       submitError.textContent = "";
       submitError.classList.add("is-hidden");
-      fetch("/api/signup", {
+      fetch("/api/auth/register", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: email.value.trim(),
@@ -105,8 +106,14 @@
         })
       }).then(function (response) {
         if (!response.ok) {
-          return response.json().then(function (body) {
-            throw new Error((body && body.error) || "Could not create account.");
+          return response.text().then(function (text) {
+            try {
+              var data = JSON.parse(text);
+              throw new Error(data.error || text || "Could not create account.");
+            } catch (err) {
+              if (err instanceof Error && err.message) throw err;
+              throw new Error(text || "Could not create account.");
+            }
           });
         }
         window.location.href = "community.html";
