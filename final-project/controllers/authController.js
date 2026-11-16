@@ -41,8 +41,12 @@ function register(req, res, next) {
     });
   }).then(function (user) {
     if (!user) return;
-    authCookie.setAuthCookie(res, user._id);
-    res.status(201).json({ ok: true, user: sanitize.publicUser(user, { includeEmail: true }) });
+    var token = authCookie.setAuthCookie(res, user._id);
+    res.status(201).json({
+      ok: true,
+      token: token,
+      user: sanitize.publicUser(user, { includeEmail: true })
+    });
   }).catch(function (err) {
     if (http.isDuplicateKeyError(err)) {
       var field = http.duplicateField(err);
@@ -77,8 +81,12 @@ function login(req, res, next) {
         http.sendError(res, 401, "Email or password is incorrect.");
         return null;
       }
-      authCookie.setAuthCookie(res, user._id);
-      res.status(200).json({ ok: true, user: sanitize.publicUser(user, { includeEmail: true }) });
+      var token = authCookie.setAuthCookie(res, user._id);
+      res.status(200).json({
+        ok: true,
+        token: token,
+        user: sanitize.publicUser(user, { includeEmail: true })
+      });
     });
   }).catch(next);
 }

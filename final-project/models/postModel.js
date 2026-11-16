@@ -45,6 +45,7 @@ var postSchema = new mongoose.Schema(
 
 postSchema.index({ author: 1, createdAt: -1 });
 postSchema.index({ community: 1, createdAt: -1 });
+postSchema.index({ createdAt: -1 });
 
 postSchema.set("toJSON", {
   transform: function (_doc, ret) {

@@ -40,6 +40,7 @@
   }
 
   function initSearch() {
+    if (document.querySelector("[data-live-posts]")) return;
     var input = document.querySelector(".search-box input");
     var posts = document.querySelectorAll(".post-card");
     if (!input || !posts.length) return;
@@ -54,6 +55,7 @@
   }
 
   function initSort() {
+    if (document.querySelector("[data-live-posts]")) return;
     var buttons = document.querySelectorAll("[data-sort]");
     var list = document.querySelector(".posts");
     if (!buttons.length || !list) return;
@@ -90,6 +92,7 @@
   }
 
   function initVotes() {
+    if (document.querySelector("[data-live-posts], [data-live-post]")) return;
     document.querySelectorAll("[data-vote]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var countEl = btn.querySelector("[data-count]");

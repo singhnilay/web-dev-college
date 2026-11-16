@@ -39,7 +39,7 @@
             throw new Error(message);
           });
         }
-        window.location.href = "community.html";
+        window.location.href = "feed.html";
       }).catch(function (requestError) {
         error.textContent = requestError.message || "Could not connect to server.";
         error.classList.remove("is-hidden");

@@ -4,6 +4,7 @@ var User = require("../models/userModel");
 var asyncHandler = require("../middleware/httpError").asyncHandler;
 var httpError = require("../middleware/httpError").httpError;
 var refs = require("../middleware/refs");
+var sanitize = require("../utils/sanitize");
 
 function createUser(req, res, next) {
   var payload = req.body || {};
@@ -29,21 +30,24 @@ function createUser(req, res, next) {
       });
     })
     .then(function (user) {
-      res.status(201).json(user);
+      res.status(201).json(sanitize.publicUser(user, { includeEmail: true }));
     })
     .catch(next);
 }
 
 var listUsers = asyncHandler(function (req, res) {
   return User.find().sort({ createdAt: -1 }).then(function (users) {
-    res.status(200).json(users);
+    res.status(200).json(users.map(function (user) {
+      return sanitize.publicUser(user);
+    }));
   });
 });
 
 var getUser = asyncHandler(function (req, res) {
   return User.findById(req.params.id).then(function (user) {
     if (!user) throw httpError(404, "User not found.");
-    res.status(200).json(user);
+    var includeEmail = req.user && req.user.id === String(user._id);
+    res.status(200).json(sanitize.publicUser(user, { includeEmail: includeEmail }));
   });
 });
 
@@ -79,7 +83,7 @@ var updateUser = asyncHandler(function (req, res) {
     })
     .then(function (user) {
       if (!user) throw httpError(404, "User not found.");
-      res.status(200).json(user);
+      res.status(200).json(sanitize.publicUser(user, { includeEmail: true }));
     });
 });
 

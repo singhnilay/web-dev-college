@@ -38,68 +38,34 @@
       Feed
     </a>
     <div class="profile-hero">
-      <div class="avatar is-lg">JD</div>
+      <div class="avatar is-lg" data-profile-avatar>JD</div>
       <div>
-        <h1>jane.doe</h1>
-        <p class="lede">Humanities, Class of ’24. Writes about campus policy and bad coffee.
+        <h1 data-profile-name>jane.doe</h1>
+        <p class="lede" data-profile-bio>Humanities, Class of ’24. Writes about campus policy and bad coffee.
         </p>
         <div class="profile-stats">
           <div>
-            <strong>12</strong>
+            <strong data-post-count>12</strong>
             Posts
           </div>
           <div>
-            <strong>Sep 2023</strong>
+            <strong data-profile-joined>Sep 2023</strong>
             Joined
           </div>
         </div>
-        <p class="logout-wrap">
+        <p class="logout-wrap" data-logout-wrap hidden>
           <a class="btn-ghost" href="../index.html" data-logout>Log out</a>
         </p>
       </div>
     </div>
     <h3 class="section-label comments-label">Recent posts</h3>
-    <div class="posts">
-      <article class="post-card">
-        <div class="post-meta">
-          <a href="community.html">Academics</a>
-          <span>5h ago</span>
-        </div>
-        <h2><a href="post.html">The Future of Humanities in a Digital Age</a></h2>
-        <p class="post-excerpt">As algorithmic thinking permeates academia, the liberal arts face an existential crisis.
-        </p>
-        <div class="post-actions">
-          <button class="vote-btn" data-vote type="button">
-            <span class="material-symbols-outlined">keyboard_arrow_up</span>
-            <span data-count>61</span>
-        <p class="post-excerpt">The proposed changes sparked a real argument in the dining hall. Putting it here so it
-          does not die in a group chat.</p>
-        <div class="post-actions">
-          <button class="vote-btn" data-vote type="button">
-            <span class="material-symbols-outlined">keyboard_arrow_up</span>
-            <span data-count>28</span>
-          </button>
-          </button>
-          <a class="comment-count" href="post.html">
-            <span class="material-symbols-outlined">chat_bubble</span>
-            14
-          </a>
-        </div>
-      </article>
-      <article class="post-card">
-        <div class="post-meta">
-          <a href="community.html">Campus Life</a>
-          <span>1w ago</span>
-        </div>
-        <h2><a href="post.html">Honor code amendments: adaptation or dilution?</a></h2>
-            <span class="material-symbols-outlined">chat_bubble</span>
-            9
-          </a>
-        </div>
-      </article>
+    <div class="posts" data-live-posts>
+      <p class="lede empty-state">Loading posts…</p>
     </div>
   </main>
   <script src="../js/app.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/profile.js"></script>
 </body>
 
 </html>

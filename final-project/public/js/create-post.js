@@ -1,21 +1,24 @@
 (function () {
   "use strict";
 
-  var COMMUNITIES = [
-    "Campus Life",
-    "Academics",
-    "Events",
-    "Memes",
-    "Opportunities",
-    "Questions"
-  ];
-
   function ready(fn) {
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", fn);
     } else {
       fn();
     }
+  }
+
+  function fillCommunities(select, communities) {
+    if (!select || !communities) return;
+    var current = select.value;
+    var html = '<option value="">Choose a room</option>';
+    communities.forEach(function (community) {
+      var label = community.name + (community.joined ? "" : " (join first)");
+      html += '<option value="' + TCR.escapeHtml(community.name) + '">' + TCR.escapeHtml(label) + "</option>";
+    });
+    select.innerHTML = html;
+    if (current) select.value = current;
   }
 
   function initCreatePost() {
@@ -35,6 +38,17 @@
       formError.classList.toggle("is-hidden", !message);
     }
 
+    TCR.me().then(function (payload) {
+      if (payload && payload.user) TCR.setAvatars(payload.user);
+      if (!payload || !payload.user) {
+        window.location.href = "login.html";
+      }
+    });
+
+    TCR.api("/api/communities", { redirectOn401: false }).then(function (communities) {
+      fillCommunities(community, communities);
+    }).catch(function () {});
+
     form.addEventListener("submit", function (event) {
       event.preventDefault();
       showError("");
@@ -48,44 +62,27 @@
         return;
       }
 
-      if (COMMUNITIES.indexOf(communityValue) === -1) {
-        showError("Choose a valid community.");
-        return;
-      }
-
       if (submitBtn) submitBtn.disabled = true;
 
-      fetch("/api/posts", {
+      TCR.api("/api/posts", {
         method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+        body: {
           title: titleValue,
           community: communityValue,
           content: contentValue,
           anonymous: Boolean(anonymous && anonymous.checked)
-        })
+        }
       })
-        .then(function (response) {
-          if (response.status === 401) {
-            window.location.href = "login.html";
-            return;
-          }
-          if (!response.ok) {
-            return response.text().then(function (text) {
-              try {
-                var data = JSON.parse(text);
-                throw new Error(data.error || "Could not publish this post.");
-              } catch (err) {
-                if (err instanceof Error && err.message) throw err;
-                throw new Error("Could not publish this post.");
-              }
-            });
-          }
+        .then(function () {
           window.location.href = "feed.html";
         })
         .catch(function (error) {
-          showError(error.message || "Could not save the post. Make sure the local server is running.");
+          if (error.status === 401) return;
+          if (error.status === 403) {
+            showError(error.message + " Open that community and join it first.");
+          } else {
+            showError(error.message || "Could not save the post. Make sure the local server is running.");
+          }
           if (submitBtn) submitBtn.disabled = false;
         });
     });

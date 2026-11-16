@@ -1,39 +1,59 @@
 "use strict";
 
+var mongoose = require("mongoose");
 var Community = require("../models/communityModel");
 var asyncHandler = require("../middleware/httpError").asyncHandler;
 var httpError = require("../middleware/httpError").httpError;
 var refs = require("../middleware/refs");
+var sanitize = require("../utils/sanitize");
+var postsController = require("./postsController");
 
-var MEMBER_POPULATE = { path: "members", select: "username email" };
+var MEMBER_SELECT = "username";
+
+function viewerId(req) {
+  return req.user && req.user.id ? String(req.user.id) : "";
+}
+
+function present(community, req) {
+  return sanitize.publicCommunity(community, viewerId(req));
+}
 
 var listCommunities = asyncHandler(function (req, res) {
-  return Community.find().populate(MEMBER_POPULATE).sort({ createdAt: -1 }).then(function (communities) {
-    res.status(200).json(communities);
+  var query = Community.find();
+  if (req.query.name) {
+    query = Community.find({
+      name: {
+        $regex: "^" + String(req.query.name).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$",
+        $options: "i"
+      }
+    });
+  }
+  return query.sort({ name: 1 }).then(function (communities) {
+    res.status(200).json(communities.map(function (community) {
+      return present(community, req);
+    }));
   });
 });
 
 var getCommunity = asyncHandler(function (req, res) {
-  return Community.findById(req.params.id).populate(MEMBER_POPULATE).then(function (community) {
+  return Community.findById(req.params.id).then(function (community) {
     if (!community) throw httpError(404, "Community not found.");
-    res.status(200).json(community);
+    res.status(200).json(present(community, req));
   });
 });
 
 var createCommunity = asyncHandler(function (req, res) {
   var payload = req.body || {};
-  var members = refs.parseIdList(payload.members, "members");
-  return refs.requireUsers(members).then(function () {
-    return Community.create({
-      name: String(payload.name || "").trim(),
-      description: payload.description == null ? "" : String(payload.description),
-      icon: payload.icon == null ? "" : String(payload.icon),
-      members: members
-    });
+  var name = String(payload.name || "").trim();
+  if (!name) throw httpError(400, "Community name is required.");
+
+  return Community.create({
+    name: name,
+    description: payload.description == null ? "" : String(payload.description),
+    icon: payload.icon == null ? "" : String(payload.icon),
+    members: [req.user.id]
   }).then(function (community) {
-    return community.populate(MEMBER_POPULATE);
-  }).then(function (community) {
-    res.status(201).json(community);
+    res.status(201).json(present(community, req));
   });
 });
 
@@ -44,25 +64,13 @@ var updateCommunity = asyncHandler(function (req, res) {
   if (payload.description != null) updates.description = String(payload.description);
   if (payload.icon != null) updates.icon = String(payload.icon);
 
-  var membersPromise = Promise.resolve();
-  if (payload.members != null) {
-    var members = refs.parseIdList(payload.members, "members");
-    membersPromise = refs.requireUsers(members).then(function () {
-      updates.members = members;
-    });
-  }
-
-  return membersPromise
-    .then(function () {
-      return Community.findByIdAndUpdate(req.params.id, updates, {
-        new: true,
-        runValidators: true
-      }).populate(MEMBER_POPULATE);
-    })
-    .then(function (community) {
-      if (!community) throw httpError(404, "Community not found.");
-      res.status(200).json(community);
-    });
+  return Community.findByIdAndUpdate(req.params.id, updates, {
+    new: true,
+    runValidators: true
+  }).then(function (community) {
+    if (!community) throw httpError(404, "Community not found.");
+    res.status(200).json(present(community, req));
+  });
 });
 
 var deleteCommunity = asyncHandler(function (req, res) {
@@ -78,10 +86,43 @@ var deleteCommunity = asyncHandler(function (req, res) {
     });
 });
 
+var joinCommunity = asyncHandler(function (req, res) {
+  var userId = new mongoose.Types.ObjectId(String(req.user.id));
+  return Community.findById(req.params.id).then(function (community) {
+    if (!community) throw httpError(404, "Community not found.");
+    if (refs.isMember(community, req.user.id)) {
+      throw httpError(409, "You are already a member of this community.");
+    }
+    return Community.findByIdAndUpdate(
+      community._id,
+      { $addToSet: { members: userId } },
+      { new: true }
+    );
+  }).then(function (community) {
+    res.status(200).json(present(community, req));
+  });
+});
+
+var leaveCommunity = asyncHandler(function (req, res) {
+  var userId = new mongoose.Types.ObjectId(String(req.user.id));
+  return Community.findByIdAndUpdate(
+    req.params.id,
+    { $pull: { members: userId } },
+    { new: true }
+  ).then(function (community) {
+    if (!community) throw httpError(404, "Community not found.");
+    res.status(200).json(present(community, req));
+  });
+});
+
 module.exports = {
   listCommunities: listCommunities,
   getCommunity: getCommunity,
   createCommunity: createCommunity,
   updateCommunity: updateCommunity,
-  deleteCommunity: deleteCommunity
+  deleteCommunity: deleteCommunity,
+  joinCommunity: joinCommunity,
+  leaveCommunity: leaveCommunity,
+  listCommunityPosts: postsController.listCommunityPosts,
+  MEMBER_SELECT: MEMBER_SELECT
 };

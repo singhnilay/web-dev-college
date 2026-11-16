@@ -1,19 +1,61 @@
 "use strict";
 
 var Comment = require("../models/commentModel");
-var User = require("../models/userModel");
 var Post = require("../models/postModel");
 var asyncHandler = require("../middleware/httpError").asyncHandler;
 var httpError = require("../middleware/httpError").httpError;
 var refs = require("../middleware/refs");
+var sanitize = require("../utils/sanitize");
+var validators = require("../utils/validators");
 
 var COMMENT_POPULATE = [
-  { path: "author", select: "username email" },
+  { path: "author", select: "username createdAt" },
   { path: "post", select: "title" }
 ];
 
+function viewerId(req) {
+  return req.user && req.user.id ? String(req.user.id) : "";
+}
+
+function present(comment, req) {
+  return sanitize.publicComment(comment, viewerId(req));
+}
+
+function commentsForPost(postId, req) {
+  return Comment.find({ post: postId })
+    .sort({ createdAt: 1 })
+    .populate(COMMENT_POPULATE)
+    .then(function (comments) {
+      return comments.map(function (comment) {
+        return present(comment, req);
+      });
+    });
+}
+
 var listComments = asyncHandler(function (req, res) {
-  return Comment.find().populate(COMMENT_POPULATE).sort({ createdAt: -1 }).then(function (comments) {
+  if (req.query.post) {
+    return refs.requireExisting(Post, req.query.post, "Post").then(function (post) {
+      return commentsForPost(post._id, req);
+    }).then(function (comments) {
+      res.status(200).json(comments);
+    });
+  }
+
+  return Comment.find()
+    .sort({ createdAt: -1 })
+    .populate(COMMENT_POPULATE)
+    .then(function (comments) {
+      res.status(200).json(comments.map(function (comment) {
+        return present(comment, req);
+      }));
+    });
+});
+
+var listForPost = asyncHandler(function (req, res) {
+  return Post.findById(req.params.id).then(function (post) {
+    if (!post) throw httpError(404, "Post not found.");
+    return commentsForPost(post._id, req);
+  }).then(function (comments) {
     res.status(200).json(comments);
   });
 });
@@ -21,76 +63,66 @@ var listComments = asyncHandler(function (req, res) {
 var getComment = asyncHandler(function (req, res) {
   return Comment.findById(req.params.id).populate(COMMENT_POPULATE).then(function (comment) {
     if (!comment) throw httpError(404, "Comment not found.");
-    res.status(200).json(comment);
+    res.status(200).json(present(comment, req));
   });
 });
 
-var createComment = asyncHandler(function (req, res) {
-  var payload = req.body || {};
-  var authorId = req.user && req.user.id ? req.user.id : payload.author;
-  return Promise.all([
-    refs.requireExisting(User, authorId, "Author"),
-    refs.requireExisting(Post, payload.post, "Post")
-  ]).then(function (results) {
+function createOnPost(postId, req) {
+  var content = validators.validateCommentContent((req.body || {}).content);
+  if (content.error) throw httpError(400, content.error);
+  if (!postId) throw httpError(400, "Post is required.");
+
+  return Post.findById(postId).then(function (post) {
+    if (!post) throw httpError(404, "Post not found.");
     return Comment.create({
-      content: String(payload.content || "").trim(),
-      author: results[0]._id,
-      post: results[1]._id
+      content: content.value,
+      author: req.user.id,
+      post: post._id
     });
   }).then(function (comment) {
     return comment.populate(COMMENT_POPULATE);
-  }).then(function (comment) {
-    res.status(201).json(comment);
+  });
+}
+
+var createComment = asyncHandler(function (req, res) {
+  var postId = (req.body || {}).post;
+  return createOnPost(postId, req).then(function (comment) {
+    res.status(201).json(present(comment, req));
+  });
+});
+
+var createForPost = asyncHandler(function (req, res) {
+  return createOnPost(req.params.id, req).then(function (comment) {
+    res.status(201).json(present(comment, req));
   });
 });
 
 var updateComment = asyncHandler(function (req, res) {
-  var payload = req.body || {};
-  var updates = {};
-  var jobs = [];
+  var content = validators.validateCommentContent((req.body || {}).content);
+  if (content.error) throw httpError(400, content.error);
 
-  if (payload.content != null) updates.content = String(payload.content).trim();
-
-  if (payload.author != null) {
-    jobs.push(
-      refs.requireExisting(User, payload.author, "Author").then(function (author) {
-        updates.author = author._id;
-      })
-    );
-  }
-
-  if (payload.post != null) {
-    jobs.push(
-      refs.requireExisting(Post, payload.post, "Post").then(function (post) {
-        updates.post = post._id;
-      })
-    );
-  }
-
-  return Promise.all(jobs)
-    .then(function () {
-      return Comment.findByIdAndUpdate(req.params.id, updates, {
-        new: true,
-        runValidators: true
-      }).populate(COMMENT_POPULATE);
+  req.comment.content = content.value;
+  return req.comment.save()
+    .then(function (comment) {
+      return comment.populate(COMMENT_POPULATE);
     })
     .then(function (comment) {
-      if (!comment) throw httpError(404, "Comment not found.");
-      res.status(200).json(comment);
+      res.status(200).json(present(comment, req));
     });
 });
 
 var deleteComment = asyncHandler(function (req, res) {
-  return Comment.findByIdAndDelete(req.params.id).then(function (comment) {
-    if (!comment) throw httpError(404, "Comment not found.");
+  return req.comment.deleteOne().then(function () {
     res.status(200).json({ ok: true });
   });
 });
 
 module.exports = {
   listComments: listComments,
+  listForPost: listForPost,
   getComment: getComment,
   createComment: createComment,
+  createForPost: createForPost,
   updateComment: updateComment,
   deleteComment: deleteComment
 };

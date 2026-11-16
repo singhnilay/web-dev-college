@@ -7,8 +7,8 @@ var auth = require("../middleware/auth");
 
 var router = express.Router();
 
-router.get("/", commentsController.listComments);
-router.get("/:id", requireValidId, commentsController.getComment);
+router.get("/", auth.optionalAuth, commentsController.listComments);
+router.get("/:id", requireValidId, auth.optionalAuth, commentsController.getComment);
 router.post("/", auth.requireAuth, commentsController.createComment);
 router.put("/:id", requireValidId, auth.requireAuth, auth.requireCommentOwner, commentsController.updateComment);
 router.delete("/:id", requireValidId, auth.requireAuth, auth.requireCommentOwner, commentsController.deleteComment);

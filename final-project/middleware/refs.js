@@ -56,6 +56,44 @@ function requireUsers(ids) {
   });
 }
 
+function escapeRegex(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function findCommunityByRef(value) {
+  var asString = String(value == null ? "" : value).trim();
+  if (!asString) return Promise.resolve(null);
+  if (isValidObjectId(asString)) {
+    return Community.findById(asString);
+  }
+  return Community.findOne({
+    name: { $regex: "^" + escapeRegex(asString) + "$", $options: "i" }
+  });
+}
+
+function requireCommunity(value) {
+  var asString = String(value == null ? "" : value).trim();
+  if (!asString) return Promise.reject(httpError(400, "Community is required."));
+  return findCommunityByRef(asString).then(function (community) {
+    if (!community) throw httpError(400, "Community not found.");
+    return community;
+  });
+}
+
+function isMember(community, userId) {
+  if (!community || !userId || !Array.isArray(community.members)) return false;
+  var id = String(userId);
+  return community.members.some(function (memberId) {
+    return String(memberId) === id;
+  });
+}
+
+function requireCommunityMember(community, userId) {
+  if (!isMember(community, userId)) {
+    throw httpError(403, "Join this community before posting.");
+  }
+}
+
 function blockIfRelated(countPromise, message) {
   return countPromise.then(function (count) {
     if (count > 0) throw httpError(409, message);
@@ -71,11 +109,8 @@ function userDeleteGuards(userId) {
   ]);
 }
 
-function postDeleteGuards(postId) {
-  return blockIfRelated(
-    Comment.countDocuments({ post: postId }),
-    "Cannot delete post while comments on this post exist."
-  );
+function deleteCommentsForPost(postId) {
+  return Comment.deleteMany({ post: postId });
 }
 
 function communityDeleteGuards(communityId) {
@@ -94,8 +129,12 @@ module.exports = {
   parseIdList: parseIdList,
   requireExisting: requireExisting,
   requireUsers: requireUsers,
+  findCommunityByRef: findCommunityByRef,
+  requireCommunity: requireCommunity,
+  isMember: isMember,
+  requireCommunityMember: requireCommunityMember,
   userDeleteGuards: userDeleteGuards,
-  postDeleteGuards: postDeleteGuards,
+  deleteCommentsForPost: deleteCommentsForPost,
   communityDeleteGuards: communityDeleteGuards,
   User: User,
   Post: Post,

@@ -81,91 +81,12 @@
         <p>Posts from across the college.</p>
       </header>
       <div class="sort-bar">
-        <button class="sort-btn is-active" data-sort type="button">🔥 Trending</button>
-        <button class="sort-btn" data-sort type="button">🆕 New</button>
-        <button class="sort-btn" data-sort type="button">⭐ Top</button>
+        <button class="sort-btn is-active" data-sort="trending" type="button">🔥 Trending</button>
+        <button class="sort-btn" data-sort="new" type="button">🆕 New</button>
+        <button class="sort-btn" data-sort="top" type="button">⭐ Top</button>
       </div>
-      <div class="posts">
-        <article class="post-card">
-          <div class="post-meta">
-            <a href="community.html">Questions</a>
-            <span>2h ago</span>
-          </div>
-          <h2><a href="post.html">Does anyone know if the library annex is open past midnight during midterms?</a></h2>
-          <p class="post-excerpt">Heard a rumor East Wing stays unlocked. Need a quiet desk that is not the dining hall.
-            Confirm before I haul my notes across campus.</p>
-          <div class="post-author">By <a href="profile.html">maya.r</a></div>
-          <div class="post-actions">
-            <button class="vote-btn" data-vote type="button">
-              <span class="material-symbols-outlined">keyboard_arrow_up</span>
-              <span data-count>24</span>
-            </button>
-            <a class="comment-count" href="post.html">
-              <span class="material-symbols-outlined">chat_bubble</span>
-              8
-            </a>
-          </div>
-        </article>
-        <article class="post-card">
-          <div class="post-meta">
-            <a href="community.html">Academics</a>
-            <span>5h ago</span>
-          </div>
-          <h2><a href="post.html">The Future of Humanities in a Digital Age</a></h2>
-          <p class="post-excerpt">As algorithmic thinking permeates academia, the liberal arts face an existential
-            crisis. Perhaps the answer is synthesis of code and classicism — not resistance.</p>
-          <div class="post-author">By <a href="profile.html">jane.doe</a></div>
-          <div class="post-actions">
-            <button class="vote-btn" data-vote type="button">
-              <span class="material-symbols-outlined">keyboard_arrow_up</span>
-              <span data-count>61</span>
-            </button>
-            <a class="comment-count" href="post.html">
-              <span class="material-symbols-outlined">chat_bubble</span>
-              14
-            </a>
-          </div>
-        </article>
-        <article class="post-card">
-          <div class="post-meta">
-            <a href="community.html">Events</a>
-            <span>Yesterday</span>
-          </div>
-          <h2><a href="post.html">Poetry Slam Finals — Student Union, Friday 7:30</a></h2>
-          <p class="post-excerpt">Doors at 7. Bring a friend. The dining hall is catering tea which means it is a Real
-            Event.</p>
-          <div class="post-author">By <a href="profile.html">events.board</a></div>
-          <div class="post-actions">
-            <button class="vote-btn" data-vote type="button">
-              <span class="material-symbols-outlined">keyboard_arrow_up</span>
-              <span data-count>19</span>
-            </button>
-            <a class="comment-count" href="post.html">
-              <span class="material-symbols-outlined">chat_bubble</span>
-              3
-            </a>
-          </div>
-        </article>
-        <article class="post-card">
-          <div class="post-meta">
-            <a href="community.html">Opportunities</a>
-            <span>2d ago</span>
-          </div>
-          <h2><a href="post.html">Research assistant needed — history of campus housing</a></h2>
-          <p class="post-excerpt">Paid, 8 hrs/week. Looking through archives in the heritage room. DM if you can read
-            1920s handwriting.</p>
-          <div class="post-author">By <a href="profile.html">dr.chen</a></div>
-          <div class="post-actions">
-            <button class="vote-btn" data-vote type="button">
-              <span class="material-symbols-outlined">keyboard_arrow_up</span>
-              <span data-count>33</span>
-            </button>
-            <a class="comment-count" href="post.html">
-              <span class="material-symbols-outlined">chat_bubble</span>
-              6
-            </a>
-          </div>
-        </article>
+      <div class="posts" data-live-posts>
+        <p class="lede empty-state">Loading the campus feed…</p>
       </div>
     </section>
     <aside class="rail">
@@ -178,16 +99,18 @@
       </div>
       <div>
         <h3 class="section-label">Rooms</h3>
-        <nav class="nav-stack">
-          <a class="nav-link subtle" href="community.html">🎓 Campus Life</a>
-          <a class="nav-link subtle" href="community.html">📚 Academics</a>
-          <a class="nav-link subtle" href="community.html">📅 Events</a>
-          <a class="nav-link subtle" href="community.html">😄 Memes</a>
+        <nav class="nav-stack" data-rail-rooms>
+          <a class="nav-link subtle" href="community.html?name=Campus%20Life">🎓 Campus Life</a>
+          <a class="nav-link subtle" href="community.html?name=Academics">📚 Academics</a>
+          <a class="nav-link subtle" href="community.html?name=Events">📅 Events</a>
+          <a class="nav-link subtle" href="community.html?name=Memes">😄 Memes</a>
         </nav>
       </div>
     </aside>
   </main>
   <script src="../js/app.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/feed.js"></script>
 </body>
 
 </html>

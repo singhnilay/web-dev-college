@@ -11,7 +11,13 @@ var validators = require("../utils/validators");
 
 function readToken(req) {
   var cookies = req.cookies || {};
-  return cookies[config.AUTH_COOKIE_NAME];
+  var cookieToken = cookies[config.AUTH_COOKIE_NAME];
+  if (cookieToken) return cookieToken;
+
+  var header = req.headers && (req.headers.authorization || req.headers.Authorization);
+  if (!header) return "";
+  var match = /^Bearer\s+(.+)$/i.exec(String(header).trim());
+  return match ? match[1].trim() : "";
 }
 
 function requireAuth(req, res, next) {

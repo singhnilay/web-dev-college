@@ -58,7 +58,7 @@ function validateCommunity(value) {
 function validateTitle(value) {
   var title = asString(value).trim();
   if (!title) return { error: "Title is required." };
-  if (title.length > 200) return { error: "Title must be at most 200 characters." };
+  if (title.length > 160) return { error: "Title must be at most 160 characters." };
   return { value: title };
 }
 

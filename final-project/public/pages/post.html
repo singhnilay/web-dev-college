@@ -37,7 +37,7 @@
       <span class="material-symbols-outlined">arrow_back</span>
       Feed
     </a>
-    <article class="post-card">
+    <article class="post-card" data-live-post>
       <div class="post-meta">
         <a href="community.html">Questions</a>
         <span>2h ago</span>
@@ -65,6 +65,7 @@
         <textarea class="editorial-textarea" id="comment-body" placeholder="Keep it one level deep."
           required></textarea>
       </div>
+      <p class="field-error is-hidden" id="comment-error"></p>
       <button class="btn-primary" type="submit">Comment</button>
     </form>
     <div class="comments" id="comment-list">
@@ -90,6 +91,8 @@
     </div>
   </main>
   <script src="../js/app.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/post-page.js"></script>
 </body>
 
 </html>

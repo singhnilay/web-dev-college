@@ -16,5 +16,5 @@ module.exports = cors({
   },
   credentials: true,
   methods: ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type"]
+  allowedHeaders: ["Content-Type", "Authorization"]
 });

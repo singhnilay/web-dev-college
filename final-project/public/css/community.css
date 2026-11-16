@@ -19,3 +19,17 @@
   color: var(--muted);
   line-height: 1.55;
 }
+
+.community-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.community-card-actions .member-count {
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}

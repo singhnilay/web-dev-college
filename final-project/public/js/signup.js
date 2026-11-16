@@ -116,7 +116,7 @@
             }
           });
         }
-        window.location.href = "community.html";
+        window.location.href = "feed.html";
       }).catch(function (error) {
         submitError.textContent = error.message || "Could not connect to server.";
         submitError.classList.remove("is-hidden");

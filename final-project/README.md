@@ -32,9 +32,9 @@ Think of it as your college’s **digital common room**: part community board, p
 - 🌗 **Dark mode** — for the late-night scrollers.
 - 📱 **Responsive layout** — works across desktop and mobile screens.
 
-> **Implementation note:** The front-end is HTML, CSS, and vanilla JavaScript. Express serves those files and JSON APIs. Users, posts, comments, and communities persist only in MongoDB Atlas. Feed search, sort, and upvote clicks on the static pages remain client-side demonstrations. Sessions and production authentication are not part of this milestone.
+> **Implementation note:** The front-end is HTML, CSS, and vanilla JavaScript. Express serves those files and JSON APIs. Users, posts, comments, communities, memberships, and upvotes persist only in MongoDB Atlas. Cookie sessions (and optional Bearer tokens) protect mutating routes.
 
-*Some screens and interactions are currently prototype/demo experiences. See [What's working right now?](#-whats-working-right-now) for the honest status.*
+*See [What's working right now?](#-whats-working-right-now) for the current status.*
 
 ---
 
@@ -195,151 +195,127 @@ A README should set expectations, not sell imaginary features. Here's the curren
 | Feature | Current status |
 |---|---|
 | Landing page and navigation | ✅ Implemented |
-| Login / signup screens | ✅ UI implemented |
-| Signup form | 🧪 Client-side validation + MongoDB user create via `/api/signup` |
-| Feed, community, post, and profile screens | ✅ UI pages present |
-| Feed search, sorting, and upvote toggle | ✅ Client-side interactions |
-| Users, posts, comments, communities CRUD | ✅ MongoDB Atlas REST APIs |
-| Create-post form | 🧪 Needs a real `author` user id and community id/name from Atlas |
-| Authentication / sessions | 🚧 Not implemented |
-| Production moderation | 🚧 Not implemented |
+| Signup / login / logout | ✅ MongoDB users + httpOnly JWT cookie (Bearer token also accepted) |
+| Home feed from Atlas | ✅ `GET /api/posts` with newest / popularity / trending sort |
+| Filter by community | ✅ `?community=` or `GET /api/communities/:id/posts` |
+| Create / edit / delete own posts | ✅ Auth + ownership. Join the community before posting. |
+| Anonymous posts | ✅ Public author is **Anonymous Student**; Atlas still stores `author` |
+| Comments | ✅ Nested under posts; edit/delete own comments only |
+| Upvotes | ✅ One per user, stored on the post, toggle to remove |
+| Communities | ✅ Seeded rooms, join/leave, membership counts |
+| Production moderation | 🚧 Not this milestone |
 
-**A quick heads-up:** `data/users.json` and `data/posts.json` are leftover backups from an earlier milestone. The app does not read or write them. Passwords are stored as bcrypt hashes. Login and signup hit MongoDB, but there are no sessions yet. Feed voting on the static pages is still a client-side demo.
+**A quick heads-up:** `data/users.json` and `data/posts.json` are leftover backups from an earlier milestone. The app does not read or write them.
 
 ---
 
-## MongoDB Atlas and REST APIs
+## API architecture
 
-Atlas is the only persistent store. `config/index.js` loads `.env` with `dotenv`. `server.js` then calls `connectDb()` (`mongoose.connect`) and only runs `app.listen` after that promise resolves. A missing `MONGODB_URI` or a failed Atlas connection logs an error and exits with code 1; the HTTP server never starts.
+Atlas is the only persistent store. `config/index.js` loads `.env`. `server.js` connects with `connectDb()` (`mongoose.connect`), seeds the six campus rooms if they are missing, then listens. A missing `MONGODB_URI` or a failed Atlas connection exits with code 1.
 
-### Collections and relationships
+Layers:
 
-- **User:** `username`, `email`, `password`, `bio`, `profileImage`, `createdAt`, `updatedAt`. Unique indexes on `username` and `email`. Password is hashed and omitted from JSON responses.
-- **Community:** `name`, `description`, `icon`, `members[]` (User), `createdAt`. Unique `name`.
-- **Post:** `title`, `content`, `author` (User), `community` (Community), `anonymous`, `upvotes[]` (User), `createdAt`, `updatedAt`.
-- **Comment:** `content`, `author` (User), `post` (Post), `createdAt`, `updatedAt`.
+| Layer | Role |
+|---|---|
+| `routes/` | REST paths and middleware order |
+| `middleware/auth.js` | Cookie or `Authorization: Bearer` JWT; post/comment ownership |
+| `controllers/` | Validation, queries, response shaping |
+| `models/` | Mongoose schemas and indexes |
+| `utils/sanitize.js` | Public JSON (hides passwords, upvote id lists, anonymous authors) |
 
-Deletes of a user, post, or community are rejected with **409** while related records still exist (posts, comments, upvotes, memberships). Invalid ObjectIds return **400**. Missing documents return **404**. Duplicate unique fields return **409**.
+Public reads use `optionalAuth` so logged-in viewers get `upvoted`, `joined`, and `isOwner`. Creates, edits, deletes, votes, and membership changes use `requireAuth`. Edit/delete of posts and comments also use `requirePostOwner` / `requireCommentOwner` (**403** if another user's document).
+
+Author on create is always `req.user.id` from the token. Clients cannot spoof another author.
+
+### REST map
+
+| Method | Path | Auth |
+|---|---|---|
+| GET | `/api/posts` | optional; `?community=` `?author=` `?sort=new\|popular\|top\|trending` |
+| GET | `/api/posts/:id` | optional |
+| POST | `/api/posts` | required; must be a member of the community |
+| PUT / DELETE | `/api/posts/:id` | owner |
+| GET / POST | `/api/posts/:id/comments` | GET optional; POST required |
+| PUT / DELETE | `/api/comments/:id` | owner |
+| POST / DELETE | `/api/posts/:id/upvote` | required; `$addToSet` / `$pull` |
+| GET | `/api/communities` | optional |
+| GET | `/api/communities/:id` | optional |
+| GET | `/api/communities/:id/posts` | optional; same sort query as feed |
+| POST / DELETE | `/api/communities/:id/join` | required; duplicate join is **409** |
+
+### Collection relationships
+
+```text
+User  <────── author ──────  Post  ── community ──>  Community
+  ^                          |  ^                       |
+  |                          |  |                       |
+  +── members[] ─────────────┘  +── post ── Comment     +── members[] (User)
+  +── upvotes[] on Post
+  +── author on Comment
+```
+
+- **User** → many **Post** and **Comment** (`author`).
+- **Community** → many **Post** (`community`); `members[]` is a unique list of User ids. `memberCount` is `members.length`.
+- **Post** → one User, one Community; `upvotes[]` is User ids (one vote per user).
+- **Comment** → one Post and one User.
+- Anonymous posts still store `author` in Atlas. Public JSON uses `{ "username": "Anonymous Student" }` with no author id. Other people's anonymous posts are omitted from `GET /api/posts?author=`.
+
+Invalid ObjectIds return **400**. Missing documents return **404**. Duplicate unique fields return **409**.
 
 ### Postman
 
 Base URL: `http://localhost:3000`
 
-Order: create a user, create a community, create a post with those ids, then create a comment.
+1. **Register** `POST /api/auth/register` with JSON `{ "username": "campus_user", "email": "student@college.edu", "password": "longenough" }`.
+2. Copy `token` from the body. In Postman: Authorization → Bearer Token (or enable cookie capture for `tcr_token`).
+3. Header `Content-Type: application/json` on every POST/PUT.
 
-| Action | Method | Path |
-|---|---|---|
-| List / get / create / update / delete users | GET POST PUT DELETE | `/api/users`, `/api/users/:id` |
-| Same for posts | GET POST PUT DELETE | `/api/posts`, `/api/posts/:id` |
-| Same for comments | GET POST PUT DELETE | `/api/comments`, `/api/comments/:id` |
-| Same for communities | GET POST PUT DELETE | `/api/communities`, `/api/communities/:id` |
+Suggested sequence:
 
-Set header `Content-Type: application/json`.
+| # | Request | Body / notes | Expect |
+|---|---|---|---|
+| 1 | GET `/api/communities` | — | Seeded rooms + `memberCount` |
+| 2 | POST `/api/communities/:id/join` | empty | `joined: true`, count + 1 |
+| 3 | POST same join again | empty | **409** already a member |
+| 4 | POST `/api/posts` without joining another room | `{ "title": "Hi", "content": "Hello campus", "community": "Memes" }` | **403** join first |
+| 5 | POST `/api/posts` | `{ "title": "Library hours", "content": "Open past 10?", "community": "Campus Life", "anonymous": true }` | **201**; `author.username` is Anonymous Student |
+| 6 | GET `/api/posts?sort=new` | — | Includes the post; no author id |
+| 7 | GET `/api/posts?community=Campus Life` | name or ObjectId | Only that room |
+| 8 | GET `/api/posts/:id` | — | Single post |
+| 9 | PUT `/api/posts/:id` as the owner | `{ "title": "Library hours — updated" }` | **200** |
+| 10 | PUT `/api/posts/:id` as a second user | same | **403** |
+| 11 | POST `/api/posts/:id/comments` | `{ "content": "Until 11 on weekdays." }` | **201** |
+| 12 | GET `/api/posts/:id/comments` | — | Array for that post |
+| 13 | PUT `/api/comments/:id` | `{ "content": "Until midnight during finals." }` | owner only |
+| 14 | POST `/api/posts/:id/upvote` twice | — | Count stays 1 |
+| 15 | DELETE `/api/posts/:id/upvote` | — | Count 0, `upvoted: false` |
+| 16 | GET `/api/communities/:id/posts?sort=popular` | — | That community, by upvote count |
+| 17 | DELETE `/api/communities/:id/join` | — | `joined: false` |
+| 18 | DELETE `/api/comments/:id` then `/api/posts/:id` | owner | `{ "ok": true }` |
 
-POST `/api/users`:
-
-```json
-{
-  "username": "campus_user",
-  "email": "student@college.edu",
-  "password": "longenough",
-  "bio": "Third year CSE",
-  "profileImage": ""
-}
-```
-
-PUT `/api/users/:id`:
-
-```json
-{
-  "bio": "Updated bio",
-  "profileImage": "https://example.com/me.jpg"
-}
-```
-
-POST `/api/communities`:
-
-```json
-{
-  "name": "Campus Life",
-  "description": "Everything happening around campus.",
-  "icon": "home",
-  "members": ["USER_OBJECT_ID"]
-}
-```
-
-PUT `/api/communities/:id`:
-
-```json
-{
-  "description": "Updated description",
-  "members": ["USER_OBJECT_ID"]
-}
-```
-
-POST `/api/posts` (`community` may be an ObjectId or an existing community name):
-
-```json
-{
-  "title": "Library hours this week",
-  "content": "Does anyone know if the library stays open past 10?",
-  "author": "USER_OBJECT_ID",
-  "community": "COMMUNITY_OBJECT_ID",
-  "anonymous": false,
-  "upvotes": []
-}
-```
-
-PUT `/api/posts/:id`:
-
-```json
-{
-  "title": "Library hours — updated",
-  "anonymous": true,
-  "upvotes": ["USER_OBJECT_ID"]
-}
-```
-
-POST `/api/comments`:
-
-```json
-{
-  "content": "It stays open until 11 on weekdays.",
-  "author": "USER_OBJECT_ID",
-  "post": "POST_OBJECT_ID"
-}
-```
-
-PUT `/api/comments/:id`:
-
-```json
-{
-  "content": "Correction: until midnight during finals."
-}
-```
-
-GET responses populate related `author`, `community`, `post`, `members`, and `upvotes` where those refs exist.
+Unauthenticated POST/PUT/DELETE should return **401**.
 
 ### Inspect records in Atlas
 
 1. Open [MongoDB Atlas](https://cloud.mongodb.com) and select the cluster in `MONGODB_URI`.
 2. Click **Browse Collections** (or **Data Explorer**).
 3. Open the database name from the URI path (for example `the-common-room`).
-4. Inspect `users`, `communities`, `posts`, and `comments`.
-5. Confirm `_id` values match the ids returned by Postman.
+4. Confirm:
+   - `users` — bcrypt `password`, no plaintext.
+   - `communities` — `members` ObjectId arrays; counts match join/leave.
+   - `posts` — `author`, `community`, `anonymous`, `upvotes`.
+   - `comments` — `post` and `author` match the API ids.
+5. For an anonymous post, the document still has a real `author` ObjectId even though GET JSON does not.
 
 ---
 
 ## 🧭 Where the project could go next
 
-The product direction is documented in [PRD.md](./PRD.md). Some possible next quests:
+This milestone stops at posts, comments, upvotes, and communities. The product direction in [PRD.md](./PRD.md) still has later work (not started here):
 
-- 🔐 Build proper authentication and user sessions.
-- 💬 Wire comments and post discussions into the front-end.
-- 🏘️ Make communities dynamic, with their own feeds.
-- 🖼️ Add image uploads and saved posts.
-- 🚩 Add reporting and moderation tools.
-- ✨ Polish accessibility, validation, and loading/error states.
+- 🖼️ Image uploads and saved posts
+- 🚩 Reporting and moderation tools
+- ✨ Extra polish: loading/error states, accessibility passes
 
 One step at a time. We’re building a common room, not the entire internet. 😌
 

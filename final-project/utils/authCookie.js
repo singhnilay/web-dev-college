@@ -31,7 +31,9 @@ function signToken(userId) {
 }
 
 function setAuthCookie(res, userId) {
-  res.cookie(config.AUTH_COOKIE_NAME, signToken(userId), cookieOptions());
+  var token = signToken(userId);
+  res.cookie(config.AUTH_COOKIE_NAME, token, cookieOptions());
+  return token;
 }
 
 function clearAuthCookie(res) {

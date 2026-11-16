@@ -2,6 +2,7 @@
 
 var mongoose = require("mongoose");
 var config = require("./index");
+var seedCommunities = require("../utils/seedCommunities");
 
 function attachConnectionEvents() {
   if (mongoose.connection.listenerCount("connected") > 0) return;
@@ -26,7 +27,9 @@ function connectDb() {
   }
 
   attachConnectionEvents();
-  return mongoose.connect(config.MONGODB_URI);
+  return mongoose.connect(config.MONGODB_URI).then(function () {
+    return seedCommunities();
+  });
 }
 
 module.exports = connectDb;
