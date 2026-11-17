@@ -51,9 +51,10 @@ var userSchema = new mongoose.Schema(
 userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ usernameLower: 1 }, { unique: true });
 
-userSchema.pre("validate", function (next) {
-  if (this.username) this.usernameLower = String(this.username).trim().toLowerCase();
-  next();
+userSchema.pre("validate", function () {
+  if (this.username) {
+    this.usernameLower = String(this.username).trim().toLowerCase();
+  }
 });
 
 userSchema.set("toJSON", {

@@ -36,19 +36,21 @@ var communitySchema = new mongoose.Schema(
 
 communitySchema.index({ name: 1 }, { unique: true });
 
-communitySchema.pre("save", function (next) {
+communitySchema.pre("save", function () {
   if (!Array.isArray(this.members)) {
-    next();
     return;
   }
+
   var seen = {};
+
   this.members = this.members.filter(function (id) {
     var key = String(id);
+
     if (seen[key]) return false;
+
     seen[key] = true;
     return true;
   });
-  next();
 });
 
 communitySchema.set("toJSON", {

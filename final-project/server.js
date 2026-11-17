@@ -49,3 +49,6 @@ connectDb()
     console.error(err.message || err);
     process.exit(1);
   });
+
+
+module.exports = app;
