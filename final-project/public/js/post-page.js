@@ -9,7 +9,7 @@
 
   function renderPost(post) {
     currentPost = post;
-    document.title = post.title + " — The Common Room";
+    document.title = post.title + " — UniHub";
     var root = document.querySelector("[data-live-post]");
     if (!root) return;
     var profileLink = TCR.authorHref(post);
@@ -54,6 +54,19 @@
         '<label class="check-row"><input type="checkbox" id="edit-anonymous" /> Post as Anonymous Student</label>' +
         '<button class="btn-primary" type="submit">Save</button>' +
       "</form>";
+
+    var noticeTitle = document.querySelector("[data-page-notice-title]");
+    var noticeBody = document.querySelector("[data-page-notice-body]");
+    var room = TCR.communityName(post.community);
+    var comments = Number(post.commentCount || 0);
+    if (noticeTitle) noticeTitle.textContent = "About this post";
+    if (noticeBody) {
+      noticeBody.textContent =
+        "Posted in " + room + " " + TCR.timeAgo(post.createdAt) +
+        " by " + author + ". " +
+        comments + (comments === 1 ? " comment. " : " comments. ") +
+        "Replies stay one level deep.";
+    }
   }
 
   function commentHtml(comment) {

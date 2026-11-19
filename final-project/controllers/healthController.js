@@ -7,7 +7,7 @@ function getHealth(req, res) {
   res.status(connected ? 200 : 503).json({
     ok: connected,
     status: connected ? "running" : "database_disconnected",
-    service: "The Common Room",
+    service: "UniHub",
     database: connected ? "connected" : "disconnected"
   });
 }

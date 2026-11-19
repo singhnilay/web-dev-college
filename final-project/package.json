@@ -1,7 +1,7 @@
 {
   "name": "the-common-room",
   "version": "1.0.0",
-  "description": "College community platform for The Common Room",
+  "description": "College community platform for UniHub",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

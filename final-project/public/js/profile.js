@@ -27,7 +27,7 @@
       if (!ctx || !ctx.user) return;
       var user = ctx.user.id ? ctx.user : ctx.user;
       var name = user.username || "";
-      document.title = name + " — The Common Room";
+      document.title = name + " — UniHub";
       var heading = document.querySelector("[data-profile-name]");
       var bio = document.querySelector("[data-profile-bio]");
       var joined = document.querySelector("[data-profile-joined]");
@@ -44,12 +44,23 @@
       if (avatar) avatar.textContent = TCR.initials(name);
       if (logout) logout.hidden = !(ctx.sessionUser && ctx.sessionUser.id === user.id);
 
+      var noticeTitle = document.querySelector("[data-page-notice-title]");
+      var noticeBody = document.querySelector("[data-page-notice-body]");
+      if (noticeTitle) noticeTitle.textContent = "About " + name;
+      var joinedLabel = joined ? joined.textContent : "";
+
       return TCR.api("/api/posts?author=" + encodeURIComponent(user.id) + "&sort=new", {
         redirectOn401: false
       }).then(function (posts) {
         var countEl = document.querySelector("[data-post-count]");
         if (countEl) countEl.textContent = String(posts.length);
         TCR.renderPosts(document.querySelector("[data-live-posts]"), posts, "No posts yet.");
+        if (noticeBody) {
+          noticeBody.textContent =
+            (user.bio ? user.bio + " " : "") +
+            posts.length + (posts.length === 1 ? " post. " : " posts. ") +
+            (joinedLabel ? "Joined " + joinedLabel + "." : "");
+        }
       });
     }).catch(function (err) {
       var list = document.querySelector("[data-live-posts]");

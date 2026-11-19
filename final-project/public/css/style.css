@@ -821,6 +821,12 @@ body.auth-page {
   padding: 2.5rem 1.25rem 4rem;
 }
 
+.layout-rail {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .page-narrow h1 {
   margin: 0 0 0.35rem;
   font-size: 2.25rem;
@@ -910,6 +916,22 @@ body.auth-page {
 
   .feed-header h1 {
     font-size: 2.5rem;
+  }
+
+  .layout-rail {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .layout-rail .page-narrow {
+    max-width: none;
+    margin: 0;
+    width: 75%;
+    border-right: 1px solid var(--border);
+  }
+
+  .layout-rail .rail {
+    width: 25%;
   }
 
   .login-card {

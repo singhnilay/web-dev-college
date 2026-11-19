@@ -4,7 +4,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Post — The Common Room</title>
+  <title>Post — UniHub</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../favicon.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -19,8 +21,8 @@
   <div class="topbar">
     <div class="topbar-inner">
       <a class="brand" href="feed.html">
-        <span class="brand-mark">C</span>
-        <h2 class="brand-name">The Common Room</h2>
+        <span class="brand-mark">U</span>
+        <h2 class="brand-name">UniHub</h2>
       </a>
       <div class="topbar-actions">
         <button class="theme-toggle" data-theme-toggle type="button" aria-pressed="false">Dark mode</button>
@@ -32,7 +34,8 @@
       </div>
     </div>
   </div>
-  <main class="page-narrow">
+  <main class="layout-rail">
+    <div class="page-narrow">
     <a class="back-row" href="feed.html">
       <span class="material-symbols-outlined">arrow_back</span>
       Feed
@@ -89,6 +92,16 @@
         <p>Security will lock the inner door if you leave it propped. Don't prop it.</p>
       </article>
     </div>
+    </div>
+    <aside class="rail">
+      <div class="notice">
+        <div class="notice-head">
+          <span class="material-symbols-outlined">info</span>
+          <h4 data-page-notice-title>About this post</h4>
+        </div>
+        <p data-page-notice-body>Read the thread, then add one comment. Replies stay one level deep. You can edit or delete only your own writing.</p>
+      </div>
+    </aside>
   </main>
   <script src="../js/app.js"></script>
   <script src="../js/api.js"></script>

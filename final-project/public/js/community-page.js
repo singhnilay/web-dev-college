@@ -23,7 +23,7 @@
 
   function renderCommunity(community) {
     currentCommunity = community;
-    document.title = community.name + " — The Common Room";
+    document.title = community.name + " — UniHub";
     var icon = document.querySelector("[data-community-icon]");
     var title = document.querySelector("[data-community-name]");
     var description = document.querySelector("[data-community-description]");
@@ -41,6 +41,16 @@
       joinBtn.textContent = community.joined ? "Leave" : "Join";
       joinBtn.classList.toggle("btn-ghost", community.joined);
       joinBtn.classList.toggle("btn-primary", !community.joined);
+    }
+    var noticeTitle = document.querySelector("[data-page-notice-title]");
+    var noticeBody = document.querySelector("[data-page-notice-body]");
+    var n = Number(community.memberCount || 0);
+    if (noticeTitle) noticeTitle.textContent = "About " + community.name;
+    if (noticeBody) {
+      noticeBody.textContent =
+        (community.description ? community.description + " " : "") +
+        n + (n === 1 ? " member. " : " members. ") +
+        "Posts in this room should stay on " + community.name + ".";
     }
   }
 

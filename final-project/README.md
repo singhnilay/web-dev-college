@@ -1,8 +1,8 @@
-# 🏫 The Common Room
+# 🏫 UniHub
 
 ### Your campus. Your people. Your conversations.
 
-**The Common Room** is a digital hangout for college life — a place to ask the questions you’re too shy to ask in the class group, find out what’s happening around campus, share opportunities, drop a meme, or start a proper discussion.
+**UniHub** is a digital hangout for college life — a place to ask the questions you’re too shy to ask in the class group, find out what’s happening around campus, share opportunities, drop a meme, or start a proper discussion.
 
 Think of it as your college’s **digital common room**: part community board, part student feed, and very much *not another chaotic WhatsApp group*.
 
@@ -325,6 +325,6 @@ One step at a time. We’re building a common room, not the entire internet. �
 
 Made as a **college web development project** to explore how a campus community platform could look and work — from the UI and responsive layouts to basic JavaScript interactions and an Express server.
 
-Have feedback, ideas, or a feature you think belongs in the Common Room? Open an issue or start a discussion!
+Have feedback, ideas, or a feature you think belongs in UniHub? Open an issue or start a discussion!
 
 **Now grab a chai, pull up a chair, and join the room.** ☕
