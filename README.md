@@ -101,13 +101,13 @@ npm run dev
 
 The server starts at:
 
-👉 **http://localhost:3000**
+👉 **http://localhost:3001**
 
-Check [http://localhost:3000/api/health](http://localhost:3000/api/health) to confirm the server is running and Atlas is connected. The process exits on startup if `MONGODB_URI` is missing or the connection fails.
+Check [http://localhost:3001/api/health](http://localhost:3000/api/health) to confirm the server is running and Atlas is connected. The process exits on startup if `MONGODB_URI` is missing or the connection fails.
 
 ### 3. Open the app
 
-Visit [http://localhost:3000](http://localhost:3000) in your browser. The server serves the files inside `public/` and handles the project's current API endpoints.
+Visit [http://localhost:3001](http://localhost:3000) in your browser. The server serves the files inside `public/` and handles the project's current API endpoints.
 
 ### 4. Want to serve only the static pages?
 
@@ -120,7 +120,7 @@ python3 -m http.server 8000
 
 Then head to [http://localhost:8000](http://localhost:8000).
 
-> ⚠️ The create-post, signup, and login flows send requests to the Express API on `http://localhost:3000`, so run the Node server for those flows. Opening the pages with a static server alone won't provide the API.
+> ⚠️ The create-post, signup, and login flows send requests to the Express API on `http://localhost:3001`, so run the Node server for those flows. Opening the pages with a static server alone won't provide the API.
 
 ---
 
